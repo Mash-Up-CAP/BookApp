@@ -10,7 +10,6 @@
 		6CCD428829B724520073292B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD428729B724520073292B /* AppDelegate.swift */; };
 		6CCD428A29B724520073292B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD428929B724520073292B /* SceneDelegate.swift */; };
 		6CCD428C29B724520073292B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD428B29B724520073292B /* ViewController.swift */; };
-		6CCD428F29B724520073292B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6CCD428D29B724520073292B /* Main.storyboard */; };
 		6CCD429129B724540073292B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CCD429029B724540073292B /* Assets.xcassets */; };
 		6CCD429429B724540073292B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6CCD429229B724540073292B /* LaunchScreen.storyboard */; };
 		6CCD429F29B724540073292B /* BookAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD429E29B724540073292B /* BookAppTests.swift */; };
@@ -40,7 +39,6 @@
 		6CCD428729B724520073292B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6CCD428929B724520073292B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		6CCD428B29B724520073292B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		6CCD428E29B724520073292B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6CCD429029B724540073292B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6CCD429329B724540073292B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6CCD429529B724540073292B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,13 +97,8 @@
 		6CCD428629B724520073292B /* BookApp */ = {
 			isa = PBXGroup;
 			children = (
-				6CCD428729B724520073292B /* AppDelegate.swift */,
-				6CCD428929B724520073292B /* SceneDelegate.swift */,
-				6CCD428B29B724520073292B /* ViewController.swift */,
-				6CCD428D29B724520073292B /* Main.storyboard */,
-				6CCD429029B724540073292B /* Assets.xcassets */,
-				6CCD429229B724540073292B /* LaunchScreen.storyboard */,
-				6CCD429529B724540073292B /* Info.plist */,
+				6CCD42B729B724640073292B /* Source */,
+				6CCD42B829B724670073292B /* Resource */,
 			);
 			path = BookApp;
 			sourceTree = "<group>";
@@ -125,6 +118,34 @@
 				6CCD42AA29B724540073292B /* BookAppUITestsLaunchTests.swift */,
 			);
 			path = BookAppUITests;
+			sourceTree = "<group>";
+		};
+		6CCD42B729B724640073292B /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				6CCD428B29B724520073292B /* ViewController.swift */,
+				6CCD42B929B7246A0073292B /* AppStart */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		6CCD42B829B724670073292B /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				6CCD429029B724540073292B /* Assets.xcassets */,
+				6CCD429229B724540073292B /* LaunchScreen.storyboard */,
+				6CCD429529B724540073292B /* Info.plist */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		6CCD42B929B7246A0073292B /* AppStart */ = {
+			isa = PBXGroup;
+			children = (
+				6CCD428729B724520073292B /* AppDelegate.swift */,
+				6CCD428929B724520073292B /* SceneDelegate.swift */,
+			);
+			path = AppStart;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,7 +254,6 @@
 			files = (
 				6CCD429429B724540073292B /* LaunchScreen.storyboard in Resources */,
 				6CCD429129B724540073292B /* Assets.xcassets in Resources */,
-				6CCD428F29B724520073292B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,14 +317,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		6CCD428D29B724520073292B /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6CCD428E29B724520073292B /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6CCD429229B724540073292B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -439,7 +451,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TLRL588DB6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BookApp/Info.plist;
+				INFOPLIST_FILE = BookApp/Resource/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -467,7 +479,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TLRL588DB6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BookApp/Info.plist;
+				INFOPLIST_FILE = BookApp/Resource/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
