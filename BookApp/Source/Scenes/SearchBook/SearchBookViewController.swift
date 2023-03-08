@@ -14,7 +14,7 @@ import UIKit
 
 protocol SearchBookDisplayLogic: AnyObject
 {
-  func displaySomething(viewModel: SearchBook.FetchBooks.ViewModel)
+  func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
 }
 
 final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
@@ -68,24 +68,77 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
   
   override func viewDidLoad()
   {
-    super.viewDidLoad()
-    doSomething()
-    setUpNavigation()
+      super.viewDidLoad()
+      self.setUpNavigation()
+      self.fetchBooks()
+      self.configureTableView()
   }
 
-  // MARK: UIComponent
+    private func setUpNavigation() {
+        let searchController = UISearchController()
+        searchController.searchBar.placeholder = "원하는 도서를 검색하세요."
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        
+        self.navigationItem.title = "도서 검색"
+        self.navigationItem.searchController = searchController
+    }
+    
+    private func configureTableView() {
+        self.bookListTableView.dataSource = self
+        self.bookListTableView.delegate = self
+    }
+
+    // MARK: - UIComponent
     @IBOutlet private weak var bookListTableView: UITableView!
-    
-    
+    private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
   
-  func doSomething()
-  {
-    let request = SearchBook.FetchBooks.Request()
-    interactor?.fetchBooks(request: request)
-  }
-  
-  func displaySomething(viewModel: SearchBook.FetchBooks.ViewModel)
-  {
-    //nameTextField.text = viewModel.name
-  }
+    private func fetchBooks() {
+        let request = SearchBook.FetchBooks.Request()
+        interactor?.fetchBooks(request: request) //1) VIP 싸이클 시작
+    }
+
+    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) { //마지막에 받아옴..
+        DispatchQueue.main.async {
+            self.displayedBooks = viewModel.displayedBooks
+            print(self.displayedBooks)
+            self.bookListTableView.reloadData()
+        }
+    }
 }
+
+extension SearchBookViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("count", displayedBooks.count)
+        return displayedBooks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(type: SearchBookCell.self, for: indexPath)
+        let displayedBook = self.displayedBooks[indexPath.row]
+        cell.configure(displayedBook)
+        return cell
+    }
+    
+}
+
+extension SearchBookViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.bookListTableView.reloadData()
+        self.bookListTableView.isHidden = false
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+//        self.bookListTableView.isHidden = true
+        // TODO: 검색결과 데이터 다시 빈 값들로
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // TODO: 검색 할 때마다 request 보냄
+    }
+}
+
+extension SearchBookViewController: UITableViewDelegate {
+    
+}
+

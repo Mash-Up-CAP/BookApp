@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SearchBookCell: UITableViewCell {
     
@@ -14,7 +15,10 @@ final class SearchBookCell: UITableViewCell {
     @IBOutlet private weak var authorLabel: UILabel!
     @IBOutlet private weak var publicationDateLabel: UILabel!
     
-    func configure() {
-        
+    func configure(_ data: SearchBook.FetchBooks.ViewModel.DisplayedBook) {
+        self.thumbnailImageView.kf.setImage(with: data.thumbnailURL)
+        self.titleLabel.text = data.title
+        self.authorLabel.text = data.author
+        self.publicationDateLabel.text = data.publishedDate
     }
 }

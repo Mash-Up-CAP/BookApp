@@ -19,13 +19,22 @@ protocol SearchBookPresentationLogic
 
 class SearchBookPresenter: SearchBookPresentationLogic
 {
-  weak var viewController: SearchBookDisplayLogic?
+    weak var viewController: SearchBookDisplayLogic?
+
+    func presentSomething(response: SearchBook.FetchBooks.Response) {
   
-  // MARK: Do something
-  
-  func presentSomething(response: SearchBook.FetchBooks.Response)
-  {
-      let viewModel = SearchBook.FetchBooks.ViewModel(displayedBooks: [])
-    viewController?.displaySomething(viewModel: viewModel)
-  }
+        var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
+        for book in response.books.items {
+            let book = book.volumeInfo
+            let author = book.authors.joined(separator: ", ")
+            let thumbnailURL = URL(string: book.imageLinks!.thumbnail)!
+            let displayedBook = SearchBook.FetchBooks.ViewModel.DisplayedBook(title: book.title,
+                                                                              author: author,
+                                                                              publishedDate: book.publishedDate,
+                                                                              thumbnailURL: thumbnailURL)
+            displayedBooks.append(displayedBook)
+        }
+        let viewModel = SearchBook.FetchBooks.ViewModel(displayedBooks: displayedBooks)
+        viewController?.displayFetchBooks(viewModel: viewModel)
+    }
 }

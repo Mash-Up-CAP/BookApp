@@ -23,9 +23,17 @@ enum SearchBook
     }
     struct Response
     {
+        var books: Books
     }
     struct ViewModel
     {
+        struct DisplayedBook {
+            var title: String
+            var author: String
+            var publishedDate: String
+            var thumbnailURL: URL
+        }
+        var displayedBooks: [DisplayedBook]
     }
   }
 }
