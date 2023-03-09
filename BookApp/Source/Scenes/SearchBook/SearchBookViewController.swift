@@ -139,6 +139,10 @@ extension SearchBookViewController: UISearchBarDelegate {
 }
 
 extension SearchBookViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let router = router {
+            router.routeToDetailBooks(indexPath.row)
+        }
+    }
 }
 

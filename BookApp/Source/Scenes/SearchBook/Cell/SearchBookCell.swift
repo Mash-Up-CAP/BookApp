@@ -21,4 +21,5 @@ final class SearchBookCell: UITableViewCell {
         self.authorLabel.text = data.author
         self.publicationDateLabel.text = data.publishedDate
     }
+    
 }
