@@ -31,7 +31,7 @@ enum SearchBook
             var title: String
             var author: String
             var publishedDate: String
-            var thumbnailURL: URL
+            var thumbnailURL: URL?
         }
         var displayedBooks: [DisplayedBook]
     }

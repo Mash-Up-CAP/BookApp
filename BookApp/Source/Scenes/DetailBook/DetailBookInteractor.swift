@@ -14,30 +14,27 @@ import UIKit
 
 protocol DetailBookBusinessLogic
 {
-  func doSomething(request: DetailBook.Something.Request)
+  func getBook(request: DetailBook.GetBook.Request)
 }
 
 protocol DetailBookDataStore
 {
-  var book: Book? { get set }
+    var book: BookInfo? { get set }
 }
 
-class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
+final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
 {
-    var book: Book?
+    var book: BookInfo?
     
-  var presenter: DetailBookPresentationLogic?
-  var worker: DetailBookWorker?
-  //var name: String = ""
+    var presenter: DetailBookPresentationLogic?
   
   // MARK: Do something
   
-  func doSomething(request: DetailBook.Something.Request)
+  func getBook(request: DetailBook.GetBook.Request)
   {
-    worker = DetailBookWorker()
-    worker?.doSomeWork()
-    
-    let response = DetailBook.Something.Response()
-    presenter?.presentSomething(response: response)
+      if let book = book {
+          let response = DetailBook.GetBook.Response(bookInfo: book)
+          presenter?.presentSomething(response: response)
+      }
   }
 }

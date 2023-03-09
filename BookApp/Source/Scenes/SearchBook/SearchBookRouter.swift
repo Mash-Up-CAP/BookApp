@@ -22,7 +22,7 @@ protocol SearchBookDataPassing
   var dataStore: SearchBookDataStore? { get }
 }
 
-class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing
+final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing
 {
   
   weak var viewController: SearchBookViewController?
@@ -47,7 +47,7 @@ class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing
     func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int)
   {
       if let selectedBook: Book = source.books?.items[index] {
-          destination.book = selectedBook
+          destination.book = selectedBook.volumeInfo
       }
   }
 }

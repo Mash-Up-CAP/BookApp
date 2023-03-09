@@ -119,8 +119,8 @@
 				6C5E00E129B9963800F15B74 /* DetailBookInteractor.swift */,
 				6C5E00DC29B9963800F15B74 /* DetailBookPresenter.swift */,
 				6C5E00DD29B9963800F15B74 /* DetailBookWorker.swift */,
-				6C5E00DE29B9963800F15B74 /* DetailBookRouter.swift */,
 				6C5E00DF29B9963800F15B74 /* DetailBookModels.swift */,
+				6C5E00DE29B9963800F15B74 /* DetailBookRouter.swift */,
 			);
 			path = DetailBook;
 			sourceTree = "<group>";

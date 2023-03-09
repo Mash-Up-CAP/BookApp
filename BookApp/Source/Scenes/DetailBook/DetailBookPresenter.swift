@@ -14,18 +14,31 @@ import UIKit
 
 protocol DetailBookPresentationLogic
 {
-  func presentSomething(response: DetailBook.Something.Response)
+  func presentSomething(response: DetailBook.GetBook.Response)
 }
 
-class DetailBookPresenter: DetailBookPresentationLogic
+final class DetailBookPresenter: DetailBookPresentationLogic
 {
   weak var viewController: DetailBookDisplayLogic?
   
   // MARK: Do something
   
-  func presentSomething(response: DetailBook.Something.Response)
+  func presentSomething(response: DetailBook.GetBook.Response)
   {
-    let viewModel = DetailBook.Something.ViewModel()
+      let bookInfo = response.bookInfo
+      let authors = bookInfo.authors.joined(separator: ", ")
+      let categories = bookInfo.categories?.joined(separator: " | ")
+      let thumbnailURL = URL(string: bookInfo.imageLinks!.thumbnail)!
+      let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: bookInfo.title,
+                                                                     author: authors,
+                                                                     thumbnailURL: thumbnailURL,
+                                                                     pageCount: "\(bookInfo.pageCount) 쪽",
+                                                                     categories: categories,
+                                                                     description: bookInfo.description,
+                                                                     publisher: bookInfo.publisher,
+                                                                     publishedDate: bookInfo.publishedDate)
+      
+    let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
     viewController?.displaySomething(viewModel: viewModel)
   }
 }

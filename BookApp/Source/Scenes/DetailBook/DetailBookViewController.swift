@@ -11,13 +11,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol DetailBookDisplayLogic: AnyObject
 {
-  func displaySomething(viewModel: DetailBook.Something.ViewModel)
+  func displaySomething(viewModel: DetailBook.GetBook.ViewModel)
 }
 
-class DetailBookViewController: UIViewController, DetailBookDisplayLogic
+final class DetailBookViewController: UIViewController, DetailBookDisplayLogic
 {
   var interactor: DetailBookBusinessLogic?
   var router: (NSObjectProtocol & DetailBookRoutingLogic & DetailBookDataPassing)?
@@ -52,38 +53,42 @@ class DetailBookViewController: UIViewController, DetailBookDisplayLogic
     router.dataStore = interactor
   }
   
-  // MARK: Routing
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-  {
-    if let scene = segue.identifier {
-      let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-      if let router = router, router.responds(to: selector) {
-        router.perform(selector, with: segue)
-      }
-    }
-  }
-  
   // MARK: View lifecycle
   
   override func viewDidLoad()
   {
-    super.viewDidLoad()
-    doSomething()
+      super.viewDidLoad()
+      self.getBook()
   }
   
   // MARK: Do something
   
-  //@IBOutlet weak var nameTextField: UITextField!
-  
-  func doSomething()
+    @IBOutlet private weak var thumbnailImageView: UIImageView!
+    @IBOutlet private weak var authorLabel: UILabel!
+    @IBOutlet private weak var categoryLabel: UILabel!
+    @IBOutlet private weak var pageLabel: UILabel!
+    @IBOutlet private weak var publishedDateLabel: UILabel!
+    @IBOutlet private weak var publisherLabel: UILabel!
+    @IBOutlet private weak var descriptionTextView: UITextView!
+
+    
+  private func getBook()
   {
-    let request = DetailBook.Something.Request()
-    interactor?.doSomething(request: request)
+    let request = DetailBook.GetBook.Request()
+      interactor?.getBook(request: request)
   }
   
-  func displaySomething(viewModel: DetailBook.Something.ViewModel)
+  func displaySomething(viewModel: DetailBook.GetBook.ViewModel)
   {
-    //nameTextField.text = viewModel.name
+      let displayedBook = viewModel.displayedBook
+      self.navigationItem.title = displayedBook.title
+      self.thumbnailImageView.kf.setImage(with: displayedBook.thumbnailURL)
+      self.authorLabel.text = displayedBook.author
+      self.categoryLabel.text = displayedBook.categories
+      self.pageLabel.text = displayedBook.pageCount
+      self.publishedDateLabel.text = displayedBook.publishedDate
+      self.publisherLabel.text = displayedBook.publisher
+      self.descriptionTextView.text = displayedBook.description
+      
   }
 }

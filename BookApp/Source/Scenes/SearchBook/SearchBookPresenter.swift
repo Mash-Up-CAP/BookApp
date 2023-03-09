@@ -17,7 +17,7 @@ protocol SearchBookPresentationLogic
   func presentSomething(response: SearchBook.FetchBooks.Response)
 }
 
-class SearchBookPresenter: SearchBookPresentationLogic
+final class SearchBookPresenter: SearchBookPresentationLogic
 {
     weak var viewController: SearchBookDisplayLogic?
 

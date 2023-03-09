@@ -22,7 +22,7 @@ protocol DetailBookDataPassing
   var dataStore: DetailBookDataStore? { get }
 }
 
-class DetailBookRouter: NSObject, DetailBookRoutingLogic, DetailBookDataPassing
+final class DetailBookRouter: NSObject, DetailBookRoutingLogic, DetailBookDataPassing
 {
   weak var viewController: DetailBookViewController?
   var dataStore: DetailBookDataStore?
