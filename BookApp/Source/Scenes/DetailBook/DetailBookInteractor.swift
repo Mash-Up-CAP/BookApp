@@ -34,7 +34,7 @@ final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
   {
       if let book = book {
           let response = DetailBook.GetBook.Response(bookInfo: book)
-          presenter?.presentSomething(response: response)
+          presenter?.presentBook(response: response)
       }
   }
 }

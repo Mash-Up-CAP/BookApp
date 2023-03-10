@@ -27,7 +27,7 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
     var presenter: SearchBookPresentationLogic?
     
     var books: Books?
-    var bookWorker = BooksWorker(booksStore: BooksStaticStore()) // TODO: API 연동하면 바꾸기
+    private var bookWorker = SearchBookWorker(booksStore: BooksStaticStore()) // TODO: API 연동하면 바꾸기
     
     func fetchBooks(request: SearchBook.FetchBooks.Request) {
         
@@ -36,7 +36,7 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
                 let books = try await self.bookWorker.fetchBooks()
                 self.books = books
                 let response = SearchBook.FetchBooks.Response(books: books)
-                self.presenter?.presentSomething(response: response)
+                self.presenter?.presentFetchedBooks(response: response)
             } catch {
                 
             }

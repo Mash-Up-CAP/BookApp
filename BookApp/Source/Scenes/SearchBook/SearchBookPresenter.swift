@@ -14,14 +14,14 @@ import UIKit
 
 protocol SearchBookPresentationLogic
 {
-  func presentSomething(response: SearchBook.FetchBooks.Response)
+  func presentFetchedBooks(response: SearchBook.FetchBooks.Response)
 }
 
 final class SearchBookPresenter: SearchBookPresentationLogic
 {
     weak var viewController: SearchBookDisplayLogic?
 
-    func presentSomething(response: SearchBook.FetchBooks.Response) {
+    func presentFetchedBooks(response: SearchBook.FetchBooks.Response) {
   
         var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
         for book in response.books.items {

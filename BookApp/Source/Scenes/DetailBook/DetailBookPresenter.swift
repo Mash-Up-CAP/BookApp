@@ -14,7 +14,7 @@ import UIKit
 
 protocol DetailBookPresentationLogic
 {
-  func presentSomething(response: DetailBook.GetBook.Response)
+  func presentBook(response: DetailBook.GetBook.Response)
 }
 
 final class DetailBookPresenter: DetailBookPresentationLogic
@@ -23,7 +23,7 @@ final class DetailBookPresenter: DetailBookPresentationLogic
   
   // MARK: Do something
   
-  func presentSomething(response: DetailBook.GetBook.Response)
+  func presentBook(response: DetailBook.GetBook.Response)
   {
       let bookInfo = response.bookInfo
       let authors = bookInfo.authors.joined(separator: ", ")

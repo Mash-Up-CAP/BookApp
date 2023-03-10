@@ -83,13 +83,12 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
   
     private func fetchBooks() {
         let request = SearchBook.FetchBooks.Request()
-        interactor?.fetchBooks(request: request) //1) VIP 싸이클 시작
+        interactor?.fetchBooks(request: request)
     }
 
-    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) { //마지막에 받아옴..
+    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
         DispatchQueue.main.async {
             self.displayedBooks = viewModel.displayedBooks
-            print(self.displayedBooks)
             self.bookListTableView.reloadData()
         }
     }
