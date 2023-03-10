@@ -17,7 +17,6 @@
 		6C716F3929B8193500828A24 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C716F3829B8193500828A24 /* Book.swift */; };
 		6C716F3C29B8195100828A24 /* BooksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C716F3B29B8195100828A24 /* BooksAPI.swift */; };
 		6C716F3E29B8250F00828A24 /* BooksStaticStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C716F3D29B8250E00828A24 /* BooksStaticStore.swift */; };
-		6C716F4129B8253B00828A24 /* BookWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C716F4029B8253B00828A24 /* BookWorker.swift */; };
 		6CCD428829B724520073292B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD428729B724520073292B /* AppDelegate.swift */; };
 		6CCD428A29B724520073292B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD428929B724520073292B /* SceneDelegate.swift */; };
 		6CCD429129B724540073292B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CCD429029B724540073292B /* Assets.xcassets */; };
@@ -63,7 +62,6 @@
 		6C716F3829B8193500828A24 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		6C716F3B29B8195100828A24 /* BooksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksAPI.swift; sourceTree = "<group>"; };
 		6C716F3D29B8250E00828A24 /* BooksStaticStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksStaticStore.swift; sourceTree = "<group>"; };
-		6C716F4029B8253B00828A24 /* BookWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookWorker.swift; sourceTree = "<group>"; };
 		6CCD428429B724520073292B /* BookApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CCD428729B724520073292B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6CCD428929B724520073292B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,14 +140,6 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
-		6C716F3F29B8253200828A24 /* Workers */ = {
-			isa = PBXGroup;
-			children = (
-				6C716F4029B8253B00828A24 /* BookWorker.swift */,
-			);
-			path = Workers;
-			sourceTree = "<group>";
-		};
 		6CCD427B29B724520073292B = {
 			isa = PBXGroup;
 			children = (
@@ -202,7 +192,6 @@
 				6CCD42B929B7246A0073292B /* AppStart */,
 				6C716F3729B8192600828A24 /* Model */,
 				6C716F3A29B8194600828A24 /* Service */,
-				6C716F3F29B8253200828A24 /* Workers */,
 				6CCD42C629B726E60073292B /* Scenes */,
 				6CCD42CE29B738490073292B /* Extenstion */,
 				6CCD42D129B73FB30073292B /* Main.storyboard */,
@@ -411,7 +400,6 @@
 				6C5E00E229B9963800F15B74 /* DetailBookPresenter.swift in Sources */,
 				6CCD42C029B7268F0073292B /* SearchBookPresenter.swift in Sources */,
 				6C716F3929B8193500828A24 /* Book.swift in Sources */,
-				6C716F4129B8253B00828A24 /* BookWorker.swift in Sources */,
 				6CCD42D029B7385C0073292B /* UITableView+Extenstion.swift in Sources */,
 				6CCD428829B724520073292B /* AppDelegate.swift in Sources */,
 				6CCD42C129B7268F0073292B /* SearchBookWorker.swift in Sources */,
