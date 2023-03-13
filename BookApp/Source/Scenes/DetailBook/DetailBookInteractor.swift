@@ -19,13 +19,12 @@ protocol DetailBookBusinessLogic
 
 protocol DetailBookDataStore
 {
-    var book: BookInfo? { get set }
+    var book: Book? { get set }
 }
 
 final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
 {
-    var book: BookInfo?
-    
+    var book: Book?
     var presenter: DetailBookPresentationLogic?
   
   // MARK: Do something
@@ -33,7 +32,7 @@ final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
   func getBook(request: DetailBook.GetBook.Request)
   {
       if let book = book {
-          let response = DetailBook.GetBook.Response(bookInfo: book)
+          let response = DetailBook.GetBook.Response(book: book)
           presenter?.presentBook(response: response)
       }
   }

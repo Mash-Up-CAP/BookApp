@@ -24,10 +24,9 @@ final class SearchBookPresenter: SearchBookPresentationLogic
     func presentFetchedBooks(response: SearchBook.FetchBooks.Response) {
   
         var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
-        for book in response.books.items {
-            let book = book.volumeInfo
-            let author = book.authors.joined(separator: ", ")
-            let thumbnailURL = URL(string: book.imageLinks!.thumbnail)!
+        for book in response.books {
+            let author = book.author.joined(separator: ", ")
+            let thumbnailURL = URL(string: book.thumbnailLink)!
             let displayedBook = SearchBook.FetchBooks.ViewModel.DisplayedBook(title: book.title,
                                                                               author: author,
                                                                               publishedDate: book.publishedDate,

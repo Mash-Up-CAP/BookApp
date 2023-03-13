@@ -25,18 +25,18 @@ final class DetailBookPresenter: DetailBookPresentationLogic
   
   func presentBook(response: DetailBook.GetBook.Response)
   {
-      let bookInfo = response.bookInfo
-      let authors = bookInfo.authors.joined(separator: ", ")
-      let categories = bookInfo.categories?.joined(separator: " | ")
-      let thumbnailURL = URL(string: bookInfo.imageLinks!.thumbnail)!
-      let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: bookInfo.title,
+      let book = response.book
+      let authors = book.authors.joined(separator: ", ")
+      let categories = book.categories?.joined(separator: " | ")
+      let thumbnailURL = URL(string: book.imageLinks.thumbnail)!
+      let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
                                                                      author: authors,
                                                                      thumbnailURL: thumbnailURL,
-                                                                     pageCount: "\(bookInfo.pageCount) 쪽",
+                                                                     pageCount: "\(book.pageCount) 쪽",
                                                                      categories: categories,
-                                                                     description: bookInfo.description,
-                                                                     publisher: bookInfo.publisher,
-                                                                     publishedDate: bookInfo.publishedDate)
+                                                                     description: book.description,
+                                                                     publisher: book.publisher,
+                                                                     publishedDate: book.publishedDate ?? "")
       
     let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
     viewController?.displaySomething(viewModel: viewModel)

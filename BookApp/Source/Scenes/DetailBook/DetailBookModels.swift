@@ -12,8 +12,6 @@
 
 import UIKit
 
-typealias BookInfo = VolumeInfo
-
 enum DetailBook
 {
   // MARK: Use cases
@@ -25,7 +23,7 @@ enum DetailBook
     }
     struct Response
     {
-        var bookInfo: BookInfo
+        var book: Book
     }
     struct ViewModel
     {

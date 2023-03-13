@@ -58,7 +58,7 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
   {
       super.viewDidLoad()
       self.setUpNavigation()
-      self.fetchBooks()
+      self.fetchBooks(title: "love", startIndex: 0) // 임시로 값 테스트
       self.configureTableView()
   }
 
@@ -81,8 +81,8 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
     @IBOutlet private weak var bookListTableView: UITableView!
     private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
   
-    private func fetchBooks() {
-        let request = SearchBook.FetchBooks.Request()
+    private func fetchBooks(title: String, startIndex: Int) {
+        let request = SearchBook.FetchBooks.Request(title: title, startIndex: startIndex)
         interactor?.fetchBooks(request: request)
     }
 

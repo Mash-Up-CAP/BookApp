@@ -20,10 +20,12 @@ enum SearchBook
   {
     struct Request
     {
+        let title: String
+        let startIndex: Int
     }
     struct Response
     {
-        var books: Books
+        var books: [BookModel]
     }
     struct ViewModel
     {

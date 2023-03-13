@@ -19,26 +19,28 @@ protocol SearchBookBusinessLogic
 
 protocol SearchBookDataStore
 {
-    var books: Books? { get }
+    var books: [BookModel]? { get }
 }
 
 final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
 {
+    var books: [BookModel]?
+    
     var presenter: SearchBookPresentationLogic?
+    var worker: SearchBookWorkerProtocol?
     
-    var books: Books?
-    private var bookWorker = SearchBookWorker(booksStore: BooksStaticStore()) // TODO: API 연동하면 바꾸기
-    
+    init(worker: SearchBookWorkerProtocol = SearchBookWorker()) {
+        self.worker = worker
+    }
+
     func fetchBooks(request: SearchBook.FetchBooks.Request) {
-        
+        guard let worker = worker else { return }
         Task {
             do {
-                let books = try await self.bookWorker.fetchBooks()
-                self.books = books
-                let response = SearchBook.FetchBooks.Response(books: books)
-                self.presenter?.presentFetchedBooks(response: response)
-            } catch {
-                
+                let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
+                print("!!!", bookModels)
+                let response = SearchBook.FetchBooks.Response(books: bookModels)
+                presenter?.presentFetchedBooks(response: response)
             }
         }
         

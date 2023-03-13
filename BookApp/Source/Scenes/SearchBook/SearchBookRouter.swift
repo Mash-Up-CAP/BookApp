@@ -30,7 +30,7 @@ final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPa
   
     // MARK: - Routing
     func routeToDetailBooks(_ selectedIndex: Int) {
-        if let detailVC = viewController?.storyboard?.instantiateViewController(withIdentifier: "DetailBookViewController") as?  DetailBookViewController,
+        if let detailVC = viewController?.storyboard?.instantiateViewController(withIdentifier: "DetailBookViewController") as? DetailBookViewController,
            var detailDS = detailVC.router?.dataStore {
             passDataToDetailBook(source: dataStore!, destination: &detailDS, index: selectedIndex)
             navigateToDetailBook(source: viewController!, destination: detailVC)
@@ -46,8 +46,8 @@ final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPa
     // MARK: -  Passing data
     func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int)
   {
-      if let selectedBook: Book = source.books?.items[index] {
-          destination.book = selectedBook.volumeInfo
-      }
+//      if let selectedBook: Book = source.books?.items[index] {
+//          destination.book = selectedBook.volumeInfo
+//      }
   }
 }
