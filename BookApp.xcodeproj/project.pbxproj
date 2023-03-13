@@ -38,7 +38,8 @@
 		6CCD42C529B7268F0073292B /* SearchBookInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD42BF29B7268F0073292B /* SearchBookInteractor.swift */; };
 		6CCD42CD29B7380C0073292B /* SearchBookCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD42CC29B7380C0073292B /* SearchBookCell.swift */; };
 		6CCD42D029B7385C0073292B /* UITableView+Extenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD42CF29B7385C0073292B /* UITableView+Extenstion.swift */; };
-		6CCD42D229B73FB30073292B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6CCD42D129B73FB30073292B /* Main.storyboard */; };
+		6CCDE40229BF5EAA007499D0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6CCDE40129BF5EAA007499D0 /* SnapKit */; };
+		6CCDE40529BF6AD9007499D0 /* DetailBookCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDE40429BF6AD9007499D0 /* DetailBookCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,7 +94,7 @@
 		6CCD42BF29B7268F0073292B /* SearchBookInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBookInteractor.swift; sourceTree = "<group>"; };
 		6CCD42CC29B7380C0073292B /* SearchBookCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBookCell.swift; sourceTree = "<group>"; };
 		6CCD42CF29B7385C0073292B /* UITableView+Extenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extenstion.swift"; sourceTree = "<group>"; };
-		6CCD42D129B73FB30073292B /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		6CCDE40429BF6AD9007499D0 /* DetailBookCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C716F3629B817EE00828A24 /* Kingfisher in Frameworks */,
+				6CCDE40229BF5EAA007499D0 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +137,7 @@
 		6C5E00DB29B9962300F15B74 /* DetailBook */ = {
 			isa = PBXGroup;
 			children = (
+				6CCDE40329BF6AD1007499D0 /* Cell */,
 				6C5E00E029B9963800F15B74 /* DetailBookViewController.swift */,
 				6C5E00E129B9963800F15B74 /* DetailBookInteractor.swift */,
 				6C5E00DC29B9963800F15B74 /* DetailBookPresenter.swift */,
@@ -236,7 +239,6 @@
 				6C716F3A29B8194600828A24 /* Service */,
 				6CCD42C629B726E60073292B /* Scenes */,
 				6CCD42CE29B738490073292B /* Extenstion */,
-				6CCD42D129B73FB30073292B /* Main.storyboard */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -299,6 +301,14 @@
 			path = Extenstion;
 			sourceTree = "<group>";
 		};
+		6CCDE40329BF6AD1007499D0 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				6CCDE40429BF6AD9007499D0 /* DetailBookCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -317,6 +327,7 @@
 			name = BookApp;
 			packageProductDependencies = (
 				6C716F3529B817EE00828A24 /* Kingfisher */,
+				6CCDE40129BF5EAA007499D0 /* SnapKit */,
 			);
 			productName = BookApp;
 			productReference = 6CCD428429B724520073292B /* BookApp.app */;
@@ -392,6 +403,7 @@
 			mainGroup = 6CCD427B29B724520073292B;
 			packageReferences = (
 				6C716F3429B817EE00828A24 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				6CCDE40029BF5EAA007499D0 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 6CCD428529B724520073292B /* Products */;
 			projectDirPath = "";
@@ -409,7 +421,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CCD42D229B73FB30073292B /* Main.storyboard in Resources */,
 				6CCD429429B724540073292B /* LaunchScreen.storyboard in Resources */,
 				6CCD429129B724540073292B /* Assets.xcassets in Resources */,
 			);
@@ -455,6 +466,7 @@
 				6CCD42CD29B7380C0073292B /* SearchBookCell.swift in Sources */,
 				6C716F3C29B8195100828A24 /* BooksAPI.swift in Sources */,
 				6C7C867429BE49370006A434 /* Book.swift in Sources */,
+				6CCDE40529BF6AD9007499D0 /* DetailBookCell.swift in Sources */,
 				6C716F3E29B8250F00828A24 /* BooksStaticStore.swift in Sources */,
 				6C5E00E529B9963800F15B74 /* DetailBookModels.swift in Sources */,
 				6C7C867129BE427C0006A434 /* SearchBookRequest.swift in Sources */,
@@ -634,7 +646,6 @@
 				INFOPLIST_FILE = BookApp/Resource/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -662,7 +673,6 @@
 				INFOPLIST_FILE = BookApp/Resource/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -804,6 +814,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		6CCDE40029BF5EAA007499D0 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -811,6 +829,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6C716F3429B817EE00828A24 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		6CCDE40129BF5EAA007499D0 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6CCDE40029BF5EAA007499D0 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -10,14 +10,14 @@ import Foundation
 typealias BookInfo = VolumeInfo
  
 // MARK: - SearchBookResponse
-struct SearchBookResponse: Codable {
+struct SearchBookResponse: Decodable {
     let kind: String
     let totalItems: Int
     let items: [Item]
 }
 
 // MARK: - Item
-struct Item: Codable {
+struct Item: Decodable {
     let kind: Kind
     let id, etag: String
     let selfLink: String
@@ -28,7 +28,7 @@ struct Item: Codable {
 }
 
 // MARK: - AccessInfo
-struct AccessInfo: Codable {
+struct AccessInfo: Decodable {
     let country: Country
     let viewability: Viewability
     let embeddable, publicDomain: Bool

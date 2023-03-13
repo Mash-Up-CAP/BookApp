@@ -13,9 +13,7 @@
 import UIKit
 
 enum SearchBook
-{
-  // MARK: Use cases
-  
+{  
   enum FetchBooks
   {
     struct Request

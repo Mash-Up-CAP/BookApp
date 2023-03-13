@@ -12,26 +12,22 @@
 
 import UIKit
 
-protocol DetailBookBusinessLogic
-{
-  func getBook(request: DetailBook.GetBook.Request)
+protocol DetailBookBusinessLogic {
+    func getBook(request: DetailBook.GetBook.Request)
 }
 
-protocol DetailBookDataStore
-{
+protocol DetailBookDataStore {
     var book: Book? { get set }
 }
 
-final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
-{
+final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore {
     var book: Book?
     var presenter: DetailBookPresentationLogic?
     
-  func getBook(request: DetailBook.GetBook.Request)
-  {
-      if let book = book {
-          let response = DetailBook.GetBook.Response(book: book)
-          presenter?.presentBook(response: response)
-      }
-  }
+    func getBook(request: DetailBook.GetBook.Request) {
+        if let book = book {
+            let response = DetailBook.GetBook.Response(book: book)
+            presenter?.presentBook(response: response)
+        }
+    }
 }

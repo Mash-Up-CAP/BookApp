@@ -12,18 +12,15 @@
 
 import UIKit
 
-protocol SearchBookBusinessLogic
-{
+protocol SearchBookBusinessLogic {
     func fetchBooks(request: SearchBook.FetchBooks.Request)
 }
 
-protocol SearchBookDataStore
-{
+protocol SearchBookDataStore {
     var books: [Book]? { get }
 }
 
-final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
-{
+final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
     var books: [Book]?
     
     var presenter: SearchBookPresentationLogic?
@@ -45,6 +42,6 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
                 presenter?.presentFetchedBooksError(response: .init(message: error.localizedDescription))
             }
         }
-        
     }
+    
 }

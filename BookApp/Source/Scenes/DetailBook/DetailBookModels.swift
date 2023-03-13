@@ -13,9 +13,7 @@
 import UIKit
 
 enum DetailBook
-{
-  // MARK: Use cases
-  
+{  
   enum GetBook
   {
     struct Request
@@ -29,12 +27,12 @@ enum DetailBook
     {
         struct DisplayedBook {
             var title: String
-            var author: String?
-            var thumbnailURL: URL?
+            var author: String
+            var thumbnailURL: URL
             var pageCount: String
-            var categories: String?
-            var description: String?
-            var publisher: String?
+            var categories: String
+            var description: String
+            var publisher: String
             var publishedDate: String
         }
         var displayedBook: DisplayedBook

@@ -33,7 +33,6 @@ final class Network: NetworkProtocol {
                     }
                     do {
                         let output = try JSONDecoder().decode(T.Output.self, from: data)
-                        print("output!!", output)
                         continuation.resume(with: .success(output))
                     } catch {
                         continuation.resume(with: .failure(error))

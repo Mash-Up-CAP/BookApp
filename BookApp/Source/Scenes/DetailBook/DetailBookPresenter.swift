@@ -12,17 +12,15 @@
 
 import UIKit
 
-protocol DetailBookPresentationLogic
-{
+protocol DetailBookPresentationLogic {
   func presentBook(response: DetailBook.GetBook.Response)
 }
 
-final class DetailBookPresenter: DetailBookPresentationLogic
-{
+final class DetailBookPresenter: DetailBookPresentationLogic {
+    
   weak var viewController: DetailBookDisplayLogic?
     
-  func presentBook(response: DetailBook.GetBook.Response)
-  {
+  func presentBook(response: DetailBook.GetBook.Response) {
       let book = response.book
       let authors = book.author.joined(separator: ", ")
       let categories = book.categories.joined(separator: " | ")
@@ -34,9 +32,9 @@ final class DetailBookPresenter: DetailBookPresentationLogic
                                                                      categories: categories,
                                                                      description: book.description,
                                                                      publisher: book.publisher,
-                                                                     publishedDate: book.publishedDate ?? "")
+                                                                     publishedDate: book.publishedDate )
       
-    let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
-    viewController?.displaySomething(viewModel: viewModel)
+      let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
+      viewController?.displaySomething(viewModel: viewModel)
   }
 }

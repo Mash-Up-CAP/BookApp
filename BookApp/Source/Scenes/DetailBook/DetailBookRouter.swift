@@ -12,17 +12,14 @@
 
 import UIKit
 
-@objc protocol DetailBookRoutingLogic
-{
+@objc protocol DetailBookRoutingLogic {
 }
 
-protocol DetailBookDataPassing
-{
+protocol DetailBookDataPassing {
   var dataStore: DetailBookDataStore? { get }
 }
 
-final class DetailBookRouter: NSObject, DetailBookRoutingLogic, DetailBookDataPassing
-{
+final class DetailBookRouter: NSObject, DetailBookRoutingLogic, DetailBookDataPassing {
   weak var viewController: DetailBookViewController?
   var dataStore: DetailBookDataStore?
   
