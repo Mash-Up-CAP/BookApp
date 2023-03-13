@@ -12,9 +12,9 @@
 
 import UIKit
 
-protocol SearchBookDisplayLogic: AnyObject
-{
-  func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
+protocol SearchBookDisplayLogic: AnyObject {
+    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
+    func displayFetchBooksError(viewModel: SearchBook.FetchBooks.ViewModel.Error)
 }
 
 final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
@@ -83,13 +83,21 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
   
     private func fetchBooks(title: String, startIndex: Int) {
         let request = SearchBook.FetchBooks.Request(title: title, startIndex: startIndex)
-        interactor?.fetchBooks(request: request)
+        self.interactor?.fetchBooks(request: request)
     }
 
     func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
         DispatchQueue.main.async {
             self.displayedBooks = viewModel.displayedBooks
             self.bookListTableView.reloadData()
+        }
+    }
+    
+    func displayFetchBooksError(viewModel: SearchBook.FetchBooks.ViewModel.Error) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

@@ -17,7 +17,7 @@ protocol SearchBookWorkerProtocol {
 }
 
 final class SearchBookWorker: SearchBookWorkerProtocol {
-    var booksStore: BooksAPIProtocol
+    private var booksStore: BooksAPIProtocol
     
     init(booksStore: BooksAPIProtocol = BooksAPI()) {
         self.booksStore = booksStore

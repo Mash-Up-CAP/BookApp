@@ -27,7 +27,7 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
     var books: [Book]?
     
     var presenter: SearchBookPresentationLogic?
-    var worker: SearchBookWorkerProtocol?
+    private var worker: SearchBookWorkerProtocol?
     
     init(worker: SearchBookWorkerProtocol = SearchBookWorker()) {
         self.worker = worker
@@ -39,9 +39,10 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
             do {
                 let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
                 self.books = bookModels
-                print("!!!", bookModels)
                 let response = SearchBook.FetchBooks.Response(books: bookModels)
                 presenter?.presentFetchedBooks(response: response)
+            } catch {
+                presenter?.presentFetchedBooksError(response: .init(message: error.localizedDescription))
             }
         }
         

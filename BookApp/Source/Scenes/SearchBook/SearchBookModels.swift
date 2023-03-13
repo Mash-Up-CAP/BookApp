@@ -26,6 +26,9 @@ enum SearchBook
     struct Response
     {
         var books: [Book]
+        struct Error {
+            var message: String
+        }
     }
     struct ViewModel
     {
@@ -34,6 +37,9 @@ enum SearchBook
             var author: String
             var publishedDate: String
             var thumbnailURL: URL?
+        }
+        struct Error {
+            var message: String
         }
         var displayedBooks: [DisplayedBook]
     }

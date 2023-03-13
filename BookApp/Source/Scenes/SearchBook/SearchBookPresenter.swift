@@ -12,9 +12,9 @@
 
 import UIKit
 
-protocol SearchBookPresentationLogic
-{
-  func presentFetchedBooks(response: SearchBook.FetchBooks.Response)
+protocol SearchBookPresentationLogic {
+    func presentFetchedBooks(response: SearchBook.FetchBooks.Response)
+    func presentFetchedBooksError(response: SearchBook.FetchBooks.Response.Error)
 }
 
 final class SearchBookPresenter: SearchBookPresentationLogic
@@ -34,6 +34,11 @@ final class SearchBookPresenter: SearchBookPresentationLogic
             displayedBooks.append(displayedBook)
         }
         let viewModel = SearchBook.FetchBooks.ViewModel(displayedBooks: displayedBooks)
-        viewController?.displayFetchBooks(viewModel: viewModel)
+        self.viewController?.displayFetchBooks(viewModel: viewModel)
+    }
+    
+    func presentFetchedBooksError(response: SearchBook.FetchBooks.Response.Error) {
+        let viewModel = SearchBook.FetchBooks.ViewModel.Error(message: response.message)
+        self.viewController?.displayFetchBooksError(viewModel: viewModel)
     }
 }
