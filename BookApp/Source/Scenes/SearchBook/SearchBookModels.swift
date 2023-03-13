@@ -25,7 +25,7 @@ enum SearchBook
     }
     struct Response
     {
-        var books: [BookModel]
+        var books: [Book]
     }
     struct ViewModel
     {

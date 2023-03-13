@@ -14,7 +14,6 @@ import UIKit
 
 @objc protocol DetailBookRoutingLogic
 {
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
 }
 
 protocol DetailBookDataPassing

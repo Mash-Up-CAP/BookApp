@@ -19,12 +19,12 @@ protocol SearchBookBusinessLogic
 
 protocol SearchBookDataStore
 {
-    var books: [BookModel]? { get }
+    var books: [Book]? { get }
 }
 
 final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
 {
-    var books: [BookModel]?
+    var books: [Book]?
     
     var presenter: SearchBookPresentationLogic?
     var worker: SearchBookWorkerProtocol?
@@ -38,6 +38,7 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
         Task {
             do {
                 let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
+                self.books = bookModels
                 print("!!!", bookModels)
                 let response = SearchBook.FetchBooks.Response(books: bookModels)
                 presenter?.presentFetchedBooks(response: response)

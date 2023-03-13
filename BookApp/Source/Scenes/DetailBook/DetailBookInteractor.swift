@@ -26,9 +26,7 @@ final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
 {
     var book: Book?
     var presenter: DetailBookPresentationLogic?
-  
-  // MARK: Do something
-  
+    
   func getBook(request: DetailBook.GetBook.Request)
   {
       if let book = book {

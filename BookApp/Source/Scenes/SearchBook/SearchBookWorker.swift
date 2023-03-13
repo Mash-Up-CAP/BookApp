@@ -13,7 +13,7 @@
 import UIKit
 
 protocol SearchBookWorkerProtocol {
-    func requestAPIBooks(title: String, startIndex: Int) async throws -> [BookModel]
+    func requestAPIBooks(title: String, startIndex: Int) async throws -> [Book]
 }
 
 final class SearchBookWorker: SearchBookWorkerProtocol {
@@ -23,24 +23,23 @@ final class SearchBookWorker: SearchBookWorkerProtocol {
         self.booksStore = booksStore
     }
     
-    func requestAPIBooks(title: String, startIndex: Int) async throws -> [BookModel] {
+    func requestAPIBooks(title: String, startIndex: Int) async throws -> [Book] {
         let request = SearchBookRequest(q: title, startIndex: "\(startIndex)")
-        print("request!!", request)
         let data =  try await booksStore.getBookRequest(request: request).items.map({ response in
             self.translate(response.volumeInfo)
         })
-        print("@#@##", data)
         return data
     }
     
-    private func translate(_ response: Book) -> BookModel {
+    private func translate(_ response: BookInfo) -> Book {
         return .init(title: response.title,
                   author: response.authors,
-                  publishedDate: response.publishedDate ?? "",
+                  publishedDate: response.publishedDate ?? "None",
                   thumbnailLink: response.imageLinks.thumbnail,
                   description: response.description ?? "",
                   pageCount: response.pageCount ?? 0,
-                  publisher: response.publisher ?? "")
+                  publisher: response.publisher ?? "None",
+                  categories: response.categories ?? ["None"])
         
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BookModel {
+struct Book {
     var title: String
     var author: [String]
     var publishedDate: String
@@ -17,5 +17,6 @@ struct BookModel {
     var description: String
     var pageCount: Int
     var publisher: String
+    var categories: [String]
 }
     

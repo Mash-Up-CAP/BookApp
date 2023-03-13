@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias Book = VolumeInfo
+typealias BookInfo = VolumeInfo
  
 // MARK: - SearchBookResponse
 struct SearchBookResponse: Codable {
@@ -21,7 +21,7 @@ struct Item: Codable {
     let kind: Kind
     let id, etag: String
     let selfLink: String
-    let volumeInfo: Book
+    let volumeInfo: BookInfo
     let saleInfo: SaleInfo
     let accessInfo: AccessInfo
     let searchInfo: SearchInfo

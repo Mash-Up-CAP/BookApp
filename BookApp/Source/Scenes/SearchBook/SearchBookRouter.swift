@@ -46,8 +46,8 @@ final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPa
     // MARK: -  Passing data
     func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int)
   {
-//      if let selectedBook: Book = source.books?.items[index] {
-//          destination.book = selectedBook.volumeInfo
-//      }
+      if let selectedBook = source.books {
+          destination.book = selectedBook[index]
+      }
   }
 }

@@ -96,7 +96,6 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
 
 extension SearchBookViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("count", displayedBooks.count)
         return displayedBooks.count
     }
     

@@ -20,15 +20,13 @@ protocol DetailBookPresentationLogic
 final class DetailBookPresenter: DetailBookPresentationLogic
 {
   weak var viewController: DetailBookDisplayLogic?
-  
-  // MARK: Do something
-  
+    
   func presentBook(response: DetailBook.GetBook.Response)
   {
       let book = response.book
-      let authors = book.authors.joined(separator: ", ")
-      let categories = book.categories?.joined(separator: " | ")
-      let thumbnailURL = URL(string: book.imageLinks.thumbnail)!
+      let authors = book.author.joined(separator: ", ")
+      let categories = book.categories.joined(separator: " | ")
+      let thumbnailURL = URL(string: book.thumbnailLink)!
       let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
                                                                      author: authors,
                                                                      thumbnailURL: thumbnailURL,
