@@ -22,17 +22,20 @@ final class DetailBookPresenter: DetailBookPresentationLogic {
     
   func presentBook(response: DetailBook.GetBook.Response) {
       let book = response.book
-      let authors = book.author.joined(separator: ", ")
-      let categories = book.categories.joined(separator: " | ")
-      let thumbnailURL = URL(string: book.thumbnailLink)!
+      guard let categories = book.categories?.joined(separator: " | "),
+            let authors = book.author?.joined(separator: ", "),
+            let thumbnailURL = URL(string: book.thumbnailLink ?? ""),
+            let description = book.description,
+            let publisher = book.publisher,
+            let publishedDate = book.publishedDate else { return }
       let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
                                                                      author: authors,
                                                                      thumbnailURL: thumbnailURL,
-                                                                     pageCount: "\(book.pageCount) 쪽",
+                                                                     pageCount: "\(String(describing: book.pageCount)) 쪽",
                                                                      categories: categories,
-                                                                     description: book.description,
-                                                                     publisher: book.publisher,
-                                                                     publishedDate: book.publishedDate )
+                                                                     description: description,
+                                                                     publisher: publisher,
+                                                                     publishedDate: publishedDate )
       
       let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
       viewController?.displaySomething(viewModel: viewModel)

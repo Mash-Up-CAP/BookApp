@@ -49,7 +49,7 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
         router.viewController = viewController
         router.dataStore = interactor
     }
-
+    
     // MARK: - UIComponent
     
     private lazy var bookListTableView: UITableView = {
@@ -68,7 +68,6 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
         super.viewDidLoad()
         self.setUpLayout()
         self.setUpNavigation()
-        self.fetchBooks(title: "love", startIndex: 0) // 임시로 값 테스트
     }
     
     private func setUpLayout() {
@@ -95,7 +94,15 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     }
     
     // MARK: - Display Logic
-    private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
+    private var scrollIndex: Int = 0
+    private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                print("♻️")
+                self.bookListTableView.reloadData()
+            }
+        }
+    }
 
     func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
         DispatchQueue.main.async {
@@ -128,17 +135,21 @@ extension SearchBookViewController: UITableViewDataSource {
 
 extension SearchBookViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.bookListTableView.reloadData()
         self.bookListTableView.isHidden = false
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-//        self.bookListTableView.isHidden = true
-        // TODO: 검색결과 데이터 다시 빈 값들로
+        self.bookListTableView.isHidden = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         // TODO: 검색 할 때마다 request 보냄
+        if !searchText.isEmpty {
+            self.fetchBooks(title: searchText, startIndex: self.scrollIndex)
+            print(searchText)
+        } else {
+            self.displayedBooks = []
+        }
     }
 }
 

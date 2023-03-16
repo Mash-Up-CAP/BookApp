@@ -11,7 +11,6 @@ protocol BooksAPIProtocol {
     func getBookRequest(request: SearchBookRequest) async throws -> SearchBookResponse
 }
 
-//datasource 역할인가?
 final class BooksAPI: BooksAPIProtocol {
 
     private let network: NetworkProtocol

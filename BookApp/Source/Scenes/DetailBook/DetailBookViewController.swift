@@ -147,7 +147,7 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         self.navigationItem.title = displayedBook.title
         self.thumbnailImageView.kf.setImage(with: displayedBook.thumbnailURL)
         [displayedBook.author, displayedBook.categories, displayedBook.pageCount, displayedBook.publishedDate, displayedBook.publisher].forEach { data in
-            infoDataList.append(data)
+            self.infoDataList.append(data)
         }
         self.descriptionTextView.text = displayedBook.description
         self.bookInfoTableView.reloadData()

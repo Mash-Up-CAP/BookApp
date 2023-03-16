@@ -13,6 +13,7 @@ final class SearchBookCell: UITableViewCell {
     
     private let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "photo")
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
         return imageView
@@ -23,7 +24,7 @@ final class SearchBookCell: UITableViewCell {
         label.font = .systemFont(ofSize: 17, weight: .semibold)
         return label
     }()
-    
+
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
@@ -57,7 +58,10 @@ final class SearchBookCell: UITableViewCell {
     }
     
     func configure(_ data: SearchBook.FetchBooks.ViewModel.DisplayedBook) {
-        self.thumbnailImageView.kf.setImage(with: data.thumbnailURL)
+        if !data.thumbnailLink.isEmpty {
+            let thumbnailURL = URL(string: data.thumbnailLink)
+            self.thumbnailImageView.kf.setImage(with: thumbnailURL)
+        }
         self.titleLabel.text = data.title
         self.authorLabel.text = data.author
         self.publicatedDateLabel.text = data.publishedDate

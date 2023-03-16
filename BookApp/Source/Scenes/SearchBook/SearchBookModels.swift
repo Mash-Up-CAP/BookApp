@@ -34,7 +34,7 @@ enum SearchBook
             var title: String
             var author: String
             var publishedDate: String
-            var thumbnailURL: URL?
+            var thumbnailLink: String
         }
         struct Error {
             var message: String
