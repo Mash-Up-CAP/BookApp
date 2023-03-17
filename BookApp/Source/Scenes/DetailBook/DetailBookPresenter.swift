@@ -21,23 +21,21 @@ final class DetailBookPresenter: DetailBookPresentationLogic {
   weak var viewController: DetailBookDisplayLogic?
     
   func presentBook(response: DetailBook.GetBook.Response) {
-      let book = response.book
-      guard let categories = book.categories?.joined(separator: " | "),
-            let authors = book.author?.joined(separator: ", "),
-            let thumbnailURL = URL(string: book.thumbnailLink ?? ""),
-            let description = book.description,
-            let publisher = book.publisher,
-            let publishedDate = book.publishedDate else { return }
-      let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
-                                                                     author: authors,
-                                                                     thumbnailURL: thumbnailURL,
-                                                                     pageCount: "\(String(describing: book.pageCount)) 쪽",
-                                                                     categories: categories,
-                                                                     description: description,
-                                                                     publisher: publisher,
-                                                                     publishedDate: publishedDate )
-      
-      let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
-      viewController?.displaySomething(viewModel: viewModel)
+        let book = response.book
+        let authors = book.author?.joined(separator: ", ") ?? "작자미상"
+        let pageInt = book.pageCount ?? 0
+        let categories = book.categories?.joined(separator: " | ") ?? ""
+        let description = book.description ?? ""
+        let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
+                                                                       author: authors,
+                                                                       thumbnailLink: book.thumbnailLink ?? "",
+                                                                       pageCount: "\(pageInt)쪽",
+                                                                       categories: categories,
+                                                                       description: description,
+                                                                       publisher: book.publisher ?? "",
+                                                                       publishedDate: book.publishedDate ?? "" )
+       print("displayedBook", displayedBook)
+       let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
+       viewController?.displaySomething(viewModel: viewModel)
   }
 }

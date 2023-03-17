@@ -145,7 +145,10 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
     func displaySomething(viewModel: DetailBook.GetBook.ViewModel) {
         let displayedBook = viewModel.displayedBook
         self.navigationItem.title = displayedBook.title
-        self.thumbnailImageView.kf.setImage(with: displayedBook.thumbnailURL)
+        if !displayedBook.thumbnailLink.isEmpty {
+            let thumbnailURL = URL(string: displayedBook.thumbnailLink)
+            self.thumbnailImageView.kf.setImage(with: thumbnailURL)
+        }
         [displayedBook.author, displayedBook.categories, displayedBook.pageCount, displayedBook.publishedDate, displayedBook.publisher].forEach { data in
             self.infoDataList.append(data)
         }
