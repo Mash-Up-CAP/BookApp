@@ -15,7 +15,7 @@ import Kingfisher
 import SnapKit
 
 protocol DetailBookDisplayLogic: AnyObject {
-  func displaySomething(viewModel: DetailBook.GetBook.ViewModel)
+  func displayFetchBook(viewModel: DetailBook.GetBook.ViewModel)
 }
 
 final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
@@ -142,7 +142,7 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
     private let infoTitleList: [String] = ["작가", "카테고리", "쪽수", "출판일", "출판사"]
     private var infoDataList: [String] = []
     
-    func displaySomething(viewModel: DetailBook.GetBook.ViewModel) {
+    func displayFetchBook(viewModel: DetailBook.GetBook.ViewModel) {
         let displayedBook = viewModel.displayedBook
         self.navigationItem.title = displayedBook.title
         if !displayedBook.thumbnailLink.isEmpty {

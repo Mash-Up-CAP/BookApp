@@ -36,6 +36,6 @@ final class DetailBookPresenter: DetailBookPresentationLogic {
                                                                        publishedDate: book.publishedDate ?? "" )
        print("displayedBook", displayedBook)
        let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
-       viewController?.displaySomething(viewModel: viewModel)
+       viewController?.displayFetchBook(viewModel: viewModel)
   }
 }

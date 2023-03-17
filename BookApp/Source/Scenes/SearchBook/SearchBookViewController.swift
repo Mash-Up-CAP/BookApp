@@ -52,12 +52,31 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     
     // MARK: - UIComponent
     
+    private lazy var noResultFoundLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색 결과가 없습니다."
+        label.font = .systemFont(ofSize: 15, weight: .semibold)
+        label.textColor = .gray
+        label.isHidden = true
+        return label
+    }()
+    
+    private let indicatorView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .darkGray
+        indicator.isHidden = true
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     private lazy var bookListTableView: UITableView = {
         let tableView = UITableView()
         tableView.rowHeight = 120
         tableView.backgroundColor = .systemBackground
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.isHidden = true
         tableView.register(SearchBookCell.self)
         return tableView
     }()
@@ -68,10 +87,22 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
         super.viewDidLoad()
         self.setUpLayout()
         self.setUpNavigation()
+        self.view.bringSubviewToFront(self.indicatorView)
     }
     
     private func setUpLayout() {
-        self.view.addSubview(self.bookListTableView)
+        [self.noResultFoundLabel, self.indicatorView, self.bookListTableView].forEach { view in
+            self.view.addSubview(view)
+        }
+        
+        self.noResultFoundLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+        
+        self.indicatorView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
         
         self.bookListTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -89,6 +120,10 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     }
     
     private func fetchBooks(title: String, startIndex: Int) {
+        DispatchQueue.main.async {
+            self.indicatorView.isHidden = false
+            self.indicatorView.startAnimating()
+        }
         let request = SearchBook.FetchBooks.Request(title: title, startIndex: startIndex)
         self.interactor?.fetchBooks(request: request)
     }
@@ -98,7 +133,8 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = [] {
         didSet {
             DispatchQueue.main.async {
-                print("♻️")
+                self.indicatorView.isHidden = true
+                self.bookListTableView.isHidden = self.displayedBooks.isEmpty
                 self.bookListTableView.reloadData()
             }
         }
@@ -107,7 +143,9 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
         DispatchQueue.main.async {
             self.displayedBooks = viewModel.displayedBooks
-            self.bookListTableView.reloadData()
+            if viewModel.displayedBooks.isEmpty {
+                self.noResultFoundLabel.isHidden = false
+            }
         }
     }
     
@@ -134,23 +172,19 @@ extension SearchBookViewController: UITableViewDataSource {
 }
 
 extension SearchBookViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.bookListTableView.isHidden = false
-    }
-    
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.bookListTableView.isHidden = true
+        self.displayedBooks = []
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // TODO: 검색 할 때마다 request 보냄
+        self.displayedBooks = []
+        self.noResultFoundLabel.isHidden = true
         if !searchText.isEmpty {
+            self.bookListTableView.isHidden = false
             self.fetchBooks(title: searchText, startIndex: self.scrollIndex)
-            print(searchText)
-        } else {
-            self.displayedBooks = []
         }
     }
+
 }
 
 extension SearchBookViewController: UITableViewDelegate {
