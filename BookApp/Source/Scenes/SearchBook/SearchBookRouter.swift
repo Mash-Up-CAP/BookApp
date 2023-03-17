@@ -29,7 +29,8 @@ final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPa
     func routeToDetailBooks(_ selectedIndex: Int) {
         let detailVC = DetailBookViewController()
         guard var detailDS = detailVC.router?.dataStore else { return }
-        passDataToDetailBook(source: dataStore!, destination: &detailDS, index: selectedIndex)
+        guard let dataStore = dataStore else { return }
+        passDataToDetailBook(source: dataStore, destination: &detailDS, index: selectedIndex)
         navigateToDetailBook(source: viewController!, destination: detailVC)
     }
     
@@ -41,6 +42,7 @@ final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPa
     // MARK: -  Passing data
     func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int) {
         if let selectedBook = source.books {
+            print("index", index, "total", selectedBook.count)
             destination.book = selectedBook[index]
         }
     }

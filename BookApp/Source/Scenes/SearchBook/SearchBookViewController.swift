@@ -128,8 +128,15 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
         self.interactor?.fetchBooks(request: request)
     }
     
+    private func fetchNextPageBooks() {
+        self.scrollIndex += 1
+        self.fetchBooks(title: self.searchText, startIndex: self.scrollIndex)
+    }
+    
     // MARK: - Display Logic
+    
     private var scrollIndex: Int = 0
+    private var searchText: String = ""
     private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -142,7 +149,7 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
 
     func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
         DispatchQueue.main.async {
-            self.displayedBooks = viewModel.displayedBooks
+            self.displayedBooks.append(contentsOf: viewModel.displayedBooks)
             if viewModel.displayedBooks.isEmpty {
                 self.noResultFoundLabel.isHidden = false
             }
@@ -171,27 +178,37 @@ extension SearchBookViewController: UITableViewDataSource {
     }
 }
 
-extension SearchBookViewController: UISearchBarDelegate {
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.displayedBooks = []
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.displayedBooks = []
-        self.noResultFoundLabel.isHidden = true
-        if !searchText.isEmpty {
-            self.bookListTableView.isHidden = false
-            self.fetchBooks(title: searchText, startIndex: self.scrollIndex)
-        }
-    }
-
-}
-
 extension SearchBookViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let router = router {
             router.routeToDetailBooks(indexPath.row)
         }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        if indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex {
+            self.fetchNextPageBooks()
+        }
+    }
+}
+
+extension SearchBookViewController: UISearchBarDelegate {
+    
+    // TODO: 연속으로 키보드 치면 API 중복 호출됨..
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.displayedBooks = []
+        self.noResultFoundLabel.isHidden = true
+        if !searchText.isEmpty {
+            self.bookListTableView.isHidden = false
+            self.searchText = searchText
+            self.fetchBooks(title: searchText, startIndex: self.scrollIndex)
+        }
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.displayedBooks = []
     }
 }
 
