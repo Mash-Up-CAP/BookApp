@@ -28,7 +28,7 @@ enum DetailBook
         struct DisplayedBook {
             var title: String
             var author: String
-            var thumbnailLink: String
+            var thumbnailLink: String?
             var pageCount: String
             var categories: String
             var description: String

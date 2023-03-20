@@ -145,9 +145,11 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
     func displayFetchBook(viewModel: DetailBook.GetBook.ViewModel) {
         let displayedBook = viewModel.displayedBook
         self.navigationItem.title = displayedBook.title
-        if !displayedBook.thumbnailLink.isEmpty {
-            let thumbnailURL = URL(string: displayedBook.thumbnailLink)
+        if let thumbnailLink = displayedBook.thumbnailLink {
+            let thumbnailURL = URL(string: thumbnailLink)
             self.thumbnailImageView.kf.setImage(with: thumbnailURL)
+        } else {
+            self.thumbnailImageView.image = UIImage(systemName: "photo")
         }
         [displayedBook.author, displayedBook.categories, displayedBook.pageCount, displayedBook.publishedDate, displayedBook.publisher].forEach { data in
             self.infoDataList.append(data)

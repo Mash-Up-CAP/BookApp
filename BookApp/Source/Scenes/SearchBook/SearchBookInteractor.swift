@@ -35,7 +35,11 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
         Task {
             do {
                 let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
-                self.books = bookModels
+                if request.startIndex != 0 {
+                    self.books?.append(contentsOf: bookModels)
+                } else {
+                    self.books = bookModels
+                }
                 let response = SearchBook.FetchBooks.Response(books: bookModels)
                 presenter?.presentFetchedBooks(response: response)
             } catch {
@@ -43,5 +47,5 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
             }
         }
     }
-    
+
 }
