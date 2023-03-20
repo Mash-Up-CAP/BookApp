@@ -12,6 +12,7 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 protocol SearchBookDisplayLogic: AnyObject {
     func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
@@ -108,13 +109,22 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
             make.edges.equalToSuperview()
         }
     }
-    
+    private var searchSubscriber: AnyCancellable?
+
     private func setUpNavigation() {
         let searchController = UISearchController()
         searchController.searchBar.placeholder = "원하는 도서를 검색하세요."
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        
+        searchSubscriber = NotificationCenter.default.publisher(for: UISearchTextField.textDidChangeNotification, object: searchController.searchBar.searchTextField)
+                 .map({ ($0.object as? UISearchTextField)?.text })
+                 .compactMap({ $0 })
+                 .filter { $0.count > 1 }
+                 .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+                 .sink { [weak self] searchText in
+                     self?.fetchBooks(title: searchText, startIndex: 0)
+                 }
+
         self.navigationItem.title = "도서 검색"
         self.navigationItem.searchController = searchController
     }
@@ -196,14 +206,12 @@ extension SearchBookViewController: UITableViewDelegate {
 
 extension SearchBookViewController: UISearchBarDelegate {
     
-    // TODO: 연속으로 키보드 치면 API 중복 호출됨..
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.displayedBooks = []
         self.noResultFoundLabel.isHidden = true
         if !searchText.isEmpty {
             self.bookListTableView.isHidden = false
             self.searchText = searchText
-            self.fetchBooks(title: searchText, startIndex: self.scrollIndex)
         }
     }
 
