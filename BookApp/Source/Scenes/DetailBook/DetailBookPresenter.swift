@@ -22,17 +22,18 @@ final class DetailBookPresenter: DetailBookPresentationLogic {
     
   func presentBook(response: DetailBook.GetBook.Response) {
       let book = response.book
-      let authors = book.author.joined(separator: ", ")
-      let categories = book.categories.joined(separator: " | ")
-      let thumbnailURL = URL(string: book.thumbnailLink)!
+      let authors = book.author?.joined(separator: ", ") ?? "작자미상"
+      let categories = book.categories?.joined(separator: " | ") ?? "None"
+      let pageCount = book.pageCount ?? 0
+      guard let thumbnailURL = URL(string: book.thumbnailLink ?? "") else { return }
       let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
                                                                      author: authors,
                                                                      thumbnailURL: thumbnailURL,
-                                                                     pageCount: "\(book.pageCount) 쪽",
+                                                                     pageCount: "\(pageCount)쪽",
                                                                      categories: categories,
-                                                                     description: book.description,
-                                                                     publisher: book.publisher,
-                                                                     publishedDate: book.publishedDate )
+                                                                     description: book.description ?? "",
+                                                                     publisher: book.publisher ?? "",
+                                                                     publishedDate: book.publishedDate ?? "")
       
       let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
       viewController?.displaySomething(viewModel: viewModel)
