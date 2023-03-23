@@ -21,7 +21,7 @@ protocol SearchBookDisplayLogic: AnyObject {
 final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     
     var interactor: SearchBookBusinessLogic?
-    var router: (NSObjectProtocol & SearchBookRoutingLogic & SearchBookDataPassing)?
+    var router: (SearchBookRoutingLogic & SearchBookDataPassing)?
     
     // MARK: - Object lifecycle
     
