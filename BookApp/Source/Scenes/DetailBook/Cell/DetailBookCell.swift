@@ -33,7 +33,7 @@ final class DetailBookCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(_ title: String, _ info: String) {
+    func configure(title: String, info: String) {
         self.titleLabel.text = title
         self.infoLabel.text = info
     }
