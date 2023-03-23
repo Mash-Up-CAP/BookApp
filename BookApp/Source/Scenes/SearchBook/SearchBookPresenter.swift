@@ -13,32 +13,33 @@
 import UIKit
 
 protocol SearchBookPresentationLogic {
-    func presentFetchedBooks(response: SearchBook.FetchBooks.Response)
-    func presentFetchedBooksError(response: SearchBook.FetchBooks.Response.Error)
+    func presentFetchBookList(response: SearchBook.FetchBookList.Response)
+    func presentFetchBookListError(response: SearchBook.FetchBookList.Response.Error)
 }
 
 final class SearchBookPresenter: SearchBookPresentationLogic {
     weak var viewController: SearchBookDisplayLogic?
 
-    func presentFetchedBooks(response: SearchBook.FetchBooks.Response) {
+    func presentFetchBookList(response: SearchBook.FetchBookList.Response) {
   
-        var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
-        for book in response.books {
+        var displayedBookList: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = []
+        for book in response.bookList {
             let author = book.author?.joined(separator: ", ") ?? "작자미상"
             let publishedDate = book.publishedDate ?? ""
             guard let thumbnailURL = URL(string: book.thumbnailLink ?? "") else { return }
-            let displayedBook = SearchBook.FetchBooks.ViewModel.DisplayedBook(title: book.title,
+            let displayedBook = SearchBook.FetchBookList.ViewModel.DisplayedBook(title: book.title,
                                                                               author: author,
                                                                               publishedDate: publishedDate,
                                                                               thumbnailURL: thumbnailURL)
-            displayedBooks.append(displayedBook)
+            displayedBookList.append(displayedBook)
         }
-        let viewModel = SearchBook.FetchBooks.ViewModel(displayedBooks: displayedBooks)
-        self.viewController?.displayFetchBooks(viewModel: viewModel)
+            
+        let viewModel = SearchBook.FetchBookList.ViewModel(displayedBookList: displayedBookList)
+        self.viewController?.displayFetchBookList(viewModel: viewModel)
     }
     
-    func presentFetchedBooksError(response: SearchBook.FetchBooks.Response.Error) {
-        let viewModel = SearchBook.FetchBooks.ViewModel.Error(message: response.message)
-        self.viewController?.displayFetchBooksError(viewModel: viewModel)
+    func presentFetchBookListError(response: SearchBook.FetchBookList.Response.Error) {
+        let viewModel = SearchBook.FetchBookList.ViewModel.Error(message: response.message)
+        self.viewController?.displayFetchBookListError(viewModel: viewModel)
     }
 }

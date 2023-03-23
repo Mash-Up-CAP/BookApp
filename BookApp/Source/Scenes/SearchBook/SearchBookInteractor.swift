@@ -13,15 +13,15 @@
 import UIKit
 
 protocol SearchBookBusinessLogic {
-    func fetchBooks(request: SearchBook.FetchBooks.Request)
+    func fetchBookList(request: SearchBook.FetchBookList.Request)
 }
 
 protocol SearchBookDataStore {
-    var books: [Book]? { get }
+    var bookList: [Book]? { get }
 }
 
 final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
-    var books: [Book]?
+    var bookList: [Book]?
     
     var presenter: SearchBookPresentationLogic?
     private var worker: SearchBookWorkerProtocol?
@@ -30,16 +30,16 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
         self.worker = worker
     }
 
-    func fetchBooks(request: SearchBook.FetchBooks.Request) {
+    func fetchBookList(request: SearchBook.FetchBookList.Request) {
         guard let worker = worker else { return }
         Task {
             do {
                 let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
-                self.books = bookModels
-                let response = SearchBook.FetchBooks.Response(books: bookModels)
-                presenter?.presentFetchedBooks(response: response)
+                self.bookList = bookModels
+                let response = SearchBook.FetchBookList.Response(bookList: bookModels)
+                presenter?.presentFetchBookList(response: response)
             } catch {
-                presenter?.presentFetchedBooksError(response: .init(message: error.localizedDescription))
+                presenter?.presentFetchBookListError(response: .init(message: error.localizedDescription))
             }
         }
     }

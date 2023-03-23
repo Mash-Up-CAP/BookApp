@@ -56,7 +56,7 @@ final class SearchBookCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(_ data: SearchBook.FetchBooks.ViewModel.DisplayedBook) {
+    func configure(_ data: SearchBook.FetchBookList.ViewModel.DisplayedBook) {
         self.thumbnailImageView.kf.setImage(with: data.thumbnailURL)
         self.titleLabel.text = data.title
         self.authorLabel.text = data.author

@@ -14,8 +14,8 @@ import UIKit
 import SnapKit
 
 protocol SearchBookDisplayLogic: AnyObject {
-    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
-    func displayFetchBooksError(viewModel: SearchBook.FetchBooks.ViewModel.Error)
+    func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel)
+    func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error)
 }
 
 final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
@@ -90,21 +90,21 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     }
     
     private func fetchBooks(title: String, startIndex: Int) {
-        let request = SearchBook.FetchBooks.Request(title: title, startIndex: startIndex)
-        self.interactor?.fetchBooks(request: request)
+        let request = SearchBook.FetchBookList.Request(title: title, startIndex: startIndex)
+        self.interactor?.fetchBookList(request: request)
     }
     
     // MARK: - Display Logic
-    private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
+    private var displayedBooks: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = []
 
-    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
+    func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel) {
         DispatchQueue.main.async {
-            self.displayedBooks = viewModel.displayedBooks
+            self.displayedBooks = viewModel.displayedBookList
             self.bookListTableView.reloadData()
         }
     }
     
-    func displayFetchBooksError(viewModel: SearchBook.FetchBooks.ViewModel.Error) {
+    func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
