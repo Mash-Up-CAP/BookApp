@@ -21,9 +21,9 @@ protocol DetailBookDisplayLogic: AnyObject {
 
 final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
     var interactor: DetailBookBusinessLogic?
-    var router: (NSObjectProtocol & DetailBookRoutingLogic & DetailBookDataPassing)?
+    var router: (DetailBookRoutingLogic & DetailBookDataPassing)?
     
-    // MARK: Object lifecycle
+    // MARK: - Object lifecycle
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
