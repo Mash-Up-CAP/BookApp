@@ -35,11 +35,15 @@ final class SearchBookPresenter: SearchBookPresentationLogic {
         }
             
         let viewModel = SearchBook.FetchBookList.ViewModel(displayedBookList: displayedBookList)
-        self.viewController?.displayFetchBookList(viewModel: viewModel)
+        Task { @MainActor in
+            self.viewController?.displayFetchBookList(viewModel: viewModel)
+        }
     }
     
     func presentFetchBookListError(response: SearchBook.FetchBookList.Response.Error) {
         let viewModel = SearchBook.FetchBookList.ViewModel.Error(message: response.message)
-        self.viewController?.displayFetchBookListError(viewModel: viewModel)
+        Task { @MainActor in
+            self.viewController?.displayFetchBookListError(viewModel: viewModel)
+        }
     }
 }

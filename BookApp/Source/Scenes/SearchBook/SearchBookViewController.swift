@@ -13,6 +13,7 @@
 import UIKit
 import SnapKit
 
+@MainActor
 protocol SearchBookDisplayLogic: AnyObject {
     func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel)
     func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error)
@@ -98,18 +99,14 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     private var displayedBooks: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = []
 
     func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel) {
-        DispatchQueue.main.async {
-            self.displayedBooks = viewModel.displayedBookList
-            self.bookListTableView.reloadData()
-        }
+        self.displayedBooks = viewModel.displayedBookList
+        self.bookListTableView.reloadData()
     }
     
     func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+        let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

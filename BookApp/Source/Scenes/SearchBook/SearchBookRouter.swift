@@ -12,6 +12,7 @@
 
 import UIKit
 
+@MainActor
 protocol SearchBookRoutingLogic: AnyObject {
     func routeToDetailBooks(_ selectedIndex: Int)
 }
