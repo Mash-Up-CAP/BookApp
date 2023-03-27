@@ -26,11 +26,11 @@ final class SearchBookPresenter: SearchBookPresentationLogic {
         for book in response.bookList {
             let author = book.author?.joined(separator: ", ") ?? "작자미상"
             let publishedDate = book.publishedDate ?? ""
-            guard let thumbnailURL = URL(string: book.thumbnailLink ?? "") else { return }
+            let thumbnailLink = book.thumbnailLink ?? ""
             let displayedBook = SearchBook.FetchBookList.ViewModel.DisplayedBook(title: book.title,
                                                                               author: author,
                                                                               publishedDate: publishedDate,
-                                                                              thumbnailURL: thumbnailURL)
+                                                                              thumbnailLink: thumbnailLink)
             displayedBookList.append(displayedBook)
         }
             

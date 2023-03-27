@@ -36,12 +36,12 @@ final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
             do {
                 let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
                 if request.startIndex != 0 {
-                    self.books?.append(contentsOf: bookModels)
+                    self.bookList?.append(contentsOf: bookModels)
                 } else {
-                    self.books = bookModels
+                    self.bookList = bookModels
                 }
-                let response = SearchBook.FetchBooks.Response(books: bookModels)
-                presenter?.presentFetchedBooks(response: response)
+                let response = SearchBook.FetchBookList.Response(bookList: bookModels)
+                presenter?.presentFetchBookList(response: response)
             } catch {
                 presenter?.presentFetchBookListError(response: .init(message: error.localizedDescription))
             }

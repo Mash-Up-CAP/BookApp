@@ -7,36 +7,37 @@
 
 import Foundation
 
-typealias BookInfo = VolumeInfo
- 
 // MARK: - SearchBookResponse
 struct SearchBookResponse: Decodable {
-    let kind: String
+    typealias BookItem = Item
+    
     let totalItems: Int
-    let items: [Item]?
+    let items: [BookItem]?
+    
+    // MARK: - Item
+    struct Item: Decodable {
+        typealias BookInfo = VolumeInfo
+
+        let volumeInfo: BookInfo
+        
+        // MARK: - VolumeInfo
+        struct VolumeInfo: Decodable {
+            let title: String
+            let authors: [String]?
+            let publisher, description: String?
+            let pageCount: Int?
+            let categories: [String]?
+            let imageLinks: ImageLinks?
+            let publishedDate: String?
+            
+            // MARK: - ImageLinks
+            struct ImageLinks: Decodable {
+                let smallThumbnail, thumbnail: String
+            }
+
+        }
+    }
 }
 
-// MARK: - Item
-struct Item: Decodable {
-    let id, etag: String
-    let selfLink: String
-    let volumeInfo: VolumeInfo
-}
 
-// MARK: - VolumeInfo
-struct VolumeInfo: Codable {
-    let title: String
-    let authors: [String]?
-    let publisher, description: String?
-    let pageCount: Int?
-    let categories: [String]?
-    let imageLinks: ImageLinks?
-    let previewLink: String
-    let infoLink: String
-    let publishedDate: String?
-}
 
-// MARK: - ImageLinks
-struct ImageLinks: Codable {
-    let smallThumbnail, thumbnail: String
-}

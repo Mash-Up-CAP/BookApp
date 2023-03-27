@@ -57,7 +57,7 @@ final class SearchBookCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(_ data: SearchBook.FetchBooks.ViewModel.DisplayedBook) {
+    func configure(_ data: SearchBook.FetchBookList.ViewModel.DisplayedBook) {
         if !data.thumbnailLink.isEmpty {
             let thumbnailURL = URL(string: data.thumbnailLink)
             self.thumbnailImageView.kf.setImage(with: thumbnailURL)

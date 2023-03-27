@@ -135,8 +135,8 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
             self.indicatorView.isHidden = false
             self.indicatorView.startAnimating()
         }
-        let request = SearchBook.FetchBooks.Request(title: title, startIndex: startIndex)
-        self.interactor?.fetchBooks(request: request)
+        let request = SearchBook.FetchBookList.Request(title: title, startIndex: startIndex)
+        self.interactor?.fetchBookList(request: request)
     }
     
     private func fetchNextPageBooks() {
@@ -148,7 +148,7 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     
     private var scrollIndex: Int = 0
     private var searchText: String = ""
-    private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = [] {
+    private var displayedBooks: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = [] {
         didSet {
             DispatchQueue.main.async {
                 self.indicatorView.isHidden = true
@@ -158,12 +158,10 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
         }
     }
 
-    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
-        DispatchQueue.main.async {
-            self.displayedBooks.append(contentsOf: viewModel.displayedBooks)
-            if viewModel.displayedBooks.isEmpty {
-                self.noResultFoundLabel.isHidden = false
-            }
+    func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel) {
+        self.displayedBooks.append(contentsOf: viewModel.displayedBookList)
+        if viewModel.displayedBookList.isEmpty {
+            self.noResultFoundLabel.isHidden = false
         }
     }
     
