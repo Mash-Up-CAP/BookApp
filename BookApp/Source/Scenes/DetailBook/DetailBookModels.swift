@@ -14,7 +14,7 @@ import UIKit
 
 enum DetailBook
 {  
-  enum GetBook
+  enum FetchBook
   {
     struct Request
     {
@@ -22,6 +22,10 @@ enum DetailBook
     struct Response
     {
         var book: Book
+
+        struct Error {
+            var message: String
+        }
     }
     struct ViewModel
     {
@@ -34,6 +38,9 @@ enum DetailBook
             var description: String
             var publisher: String
             var publishedDate: String
+        }
+        struct Error {
+            var message: String
         }
         var displayedBook: DisplayedBook
     }

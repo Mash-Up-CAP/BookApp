@@ -31,7 +31,7 @@ final class SearchBookWorker: SearchBookWorkerProtocol {
         return data ?? []
     }
     
-    private func translate(_ response: BookInfo) -> Book {
+    private func translate(_ response: SearchBookResponse.BookItem.BookInfo) -> Book {
         return .init(title: response.title,
                      author: response.authors,
                   publishedDate: response.publishedDate,

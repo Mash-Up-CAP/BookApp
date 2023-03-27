@@ -14,15 +14,16 @@ import UIKit
 import SnapKit
 import Combine
 
+@MainActor
 protocol SearchBookDisplayLogic: AnyObject {
-    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
-    func displayFetchBooksError(viewModel: SearchBook.FetchBooks.ViewModel.Error)
+    func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel)
+    func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error)
 }
 
 final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     
     var interactor: SearchBookBusinessLogic?
-    var router: (NSObjectProtocol & SearchBookRoutingLogic & SearchBookDataPassing)?
+    var router: (SearchBookRoutingLogic & SearchBookDataPassing)?
     
     // MARK: - Object lifecycle
     
@@ -166,12 +167,10 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
         }
     }
     
-    func displayFetchBooksError(viewModel: SearchBook.FetchBooks.ViewModel.Error) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+    func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error) {
+        let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

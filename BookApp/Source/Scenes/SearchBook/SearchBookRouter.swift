@@ -12,15 +12,16 @@
 
 import UIKit
 
-@objc protocol SearchBookRoutingLogic {
+@MainActor
+protocol SearchBookRoutingLogic: AnyObject {
     func routeToDetailBooks(_ selectedIndex: Int)
 }
 
-protocol SearchBookDataPassing {
+protocol SearchBookDataPassing: AnyObject {
   var dataStore: SearchBookDataStore? { get }
 }
 
-final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing {
+final class SearchBookRouter: SearchBookRoutingLogic, SearchBookDataPassing {
   
   weak var viewController: SearchBookViewController?
   var dataStore: SearchBookDataStore?
@@ -41,9 +42,8 @@ final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPa
   
     // MARK: -  Passing data
     func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int) {
-        if let selectedBook = source.books {
-            print("index", index, "total", selectedBook.count)
-            destination.book = selectedBook[index]
+        if let selectedBook = source.bookList {
+          destination.book = selectedBook[index]
         }
     }
 }

@@ -14,7 +14,7 @@ import UIKit
 
 enum SearchBook
 {  
-  enum FetchBooks
+  enum FetchBookList
   {
     struct Request
     {
@@ -23,7 +23,8 @@ enum SearchBook
     }
     struct Response
     {
-        var books: [Book]
+        var bookList: [Book]
+
         struct Error {
             var message: String
         }
@@ -39,7 +40,7 @@ enum SearchBook
         struct Error {
             var message: String
         }
-        var displayedBooks: [DisplayedBook]
+        var displayedBookList: [DisplayedBook]
     }
   }
 }

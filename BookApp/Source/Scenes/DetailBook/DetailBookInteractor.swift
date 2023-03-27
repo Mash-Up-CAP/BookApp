@@ -13,7 +13,7 @@
 import UIKit
 
 protocol DetailBookBusinessLogic {
-    func getBook(request: DetailBook.GetBook.Request)
+    func fetchBook(request: DetailBook.FetchBook.Request)
 }
 
 protocol DetailBookDataStore {
@@ -21,13 +21,21 @@ protocol DetailBookDataStore {
 }
 
 final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore {
+    
+    enum FetchBookError: String {
+        case noBookResponse = "선택한 책 정보가 없습니다."
+    }
+    
     var book: Book?
     var presenter: DetailBookPresentationLogic?
     
-    func getBook(request: DetailBook.GetBook.Request) {
+    func fetchBook(request: DetailBook.FetchBook.Request) {
+//        book = nil // TODO: 에러 테스트 위함
         if let book = book {
-            let response = DetailBook.GetBook.Response(book: book)
-            presenter?.presentBook(response: response)
+            let response = DetailBook.FetchBook.Response(book: book)
+            presenter?.presentFetchBook(response: response)
+        } else {
+            presenter?.presentFetchBookError(response: .init(message: FetchBookError.noBookResponse.rawValue))
         }
     }
 }

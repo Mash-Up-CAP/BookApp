@@ -13,28 +13,35 @@
 import UIKit
 
 protocol DetailBookPresentationLogic {
-  func presentBook(response: DetailBook.GetBook.Response)
+    func presentFetchBook(response: DetailBook.FetchBook.Response)
+    func presentFetchBookError(response: DetailBook.FetchBook.Response.Error)
 }
 
 final class DetailBookPresenter: DetailBookPresentationLogic {
     
-  weak var viewController: DetailBookDisplayLogic?
+    weak var viewController: DetailBookDisplayLogic?
+
+    func presentFetchBook(response: DetailBook.FetchBook.Response) {
+          let book = response.book
+          let authors = book.author?.joined(separator: ", ") ?? "작자미상"
+          let categories = book.categories?.joined(separator: " | ") ?? "None"
+          let pageCount = book.pageCount ?? 0
+          guard let thumbnailURL = URL(string: book.thumbnailLink ?? "") else { return }
+          let displayedBook = DetailBook.FetchBook.ViewModel.DisplayedBook(title: book.title,
+                                                                         author: authors,
+                                                                         thumbnailURL: thumbnailURL,
+                                                                         pageCount: "\(pageCount)쪽",
+                                                                         categories: categories,
+                                                                         description: book.description ?? "",
+                                                                         publisher: book.publisher ?? "",
+                                                                         publishedDate: book.publishedDate ?? "")
+          
+          viewController?.displayFetchBook(viewModel: displayedBook)
+    }
     
-  func presentBook(response: DetailBook.GetBook.Response) {
-        let book = response.book
-        let authors = book.author?.joined(separator: ", ") ?? "작자미상"
-        let pageInt = book.pageCount ?? 0
-        let categories = book.categories?.joined(separator: " | ") ?? ""
-        let description = book.description ?? ""
-        let displayedBook = DetailBook.GetBook.ViewModel.DisplayedBook(title: book.title,
-                                                                       author: authors,
-                                                                       thumbnailLink: book.thumbnailLink ?? "",
-                                                                       pageCount: "\(pageInt)쪽",
-                                                                       categories: categories,
-                                                                       description: description,
-                                                                       publisher: book.publisher ?? "",
-                                                                       publishedDate: book.publishedDate ?? "" )
-       let viewModel = DetailBook.GetBook.ViewModel(displayedBook: displayedBook)
-       viewController?.displayFetchBook(viewModel: viewModel)
-  }
+    func presentFetchBookError(response: DetailBook.FetchBook.Response.Error) {
+        let viewModel = DetailBook.FetchBook.ViewModel.Error(message: response.message)
+        self.viewController?.displayFetchBookError(viewModel: viewModel)
+    }
+
 }

@@ -15,14 +15,15 @@ import Kingfisher
 import SnapKit
 
 protocol DetailBookDisplayLogic: AnyObject {
-  func displayFetchBook(viewModel: DetailBook.GetBook.ViewModel)
+    func displayFetchBook(viewModel: DetailBook.FetchBook.ViewModel.DisplayedBook)
+    func displayFetchBookError(viewModel: DetailBook.FetchBook.ViewModel.Error)
 }
 
 final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
     var interactor: DetailBookBusinessLogic?
-    var router: (NSObjectProtocol & DetailBookRoutingLogic & DetailBookDataPassing)?
+    var router: (DetailBookRoutingLogic & DetailBookDataPassing)?
     
-    // MARK: Object lifecycle
+    // MARK: - Object lifecycle
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -34,7 +35,7 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         setup()
     }
     
-    // MARK: Setup
+    // MARK: - Setup
     
     private func setup() {
         let viewController = self
@@ -49,16 +50,16 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         router.dataStore = interactor
     }
 
-  // MARK: UI Componenet
+    // MARK: - UI Componenet
     
-    private let thumbnailImageView: UIImageView = {
+    private lazy var thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
         return imageView
     }()
     
-    private let lineView: UIView = {
+    private lazy var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray5
         return view
@@ -73,7 +74,7 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         return tableView
     }()
     
-    private let descriptionLabel: UILabel = {
+    private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = "책 소개"
         label.font = .systemFont(ofSize: 17, weight: .semibold)
@@ -87,18 +88,25 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         return textView
     }()
     
-    // MARK: View lifecycle
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15, weight: .semibold)
+        label.textColor = .red
+        label.isHidden = true
+        return label
+    }()
+    
+    // MARK: - View lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBackground
-        self.getBook()
-        self.setupLayout()
+        self.requestBook()
     }
     
-    private func getBook() {
-        let request = DetailBook.GetBook.Request()
-        interactor?.getBook(request: request)
+    private func requestBook() {
+        let request = DetailBook.FetchBook.Request()
+        interactor?.fetchBook(request: request)
     }
     
     private func setupLayout() {
@@ -138,24 +146,36 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         }
     }
   
+    private func setupErrorLayout() {
+        self.view.addSubview(self.errorLabel)
+        
+        self.errorLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+    }
     // MARK: - Display Logic
-    private let infoTitleList: [String] = ["작가", "카테고리", "쪽수", "출판일", "출판사"]
-    private var infoDataList: [String] = []
     
-    func displayFetchBook(viewModel: DetailBook.GetBook.ViewModel) {
-        let displayedBook = viewModel.displayedBook
-        self.navigationItem.title = displayedBook.title
-        if let thumbnailLink = displayedBook.thumbnailLink {
-            let thumbnailURL = URL(string: thumbnailLink)
-            self.thumbnailImageView.kf.setImage(with: thumbnailURL)
-        } else {
-            self.thumbnailImageView.image = UIImage(systemName: "photo")
+    private let infoTitleList: [String] = ["작가", "카테고리", "쪽수", "출판일", "출판사"]
+    private (set)var infoDataList: [String] = []
+    
+    func displayFetchBook(viewModel: DetailBook.FetchBook.ViewModel.DisplayedBook) {
+        self.setupLayout()
+        
+        self.navigationItem.title = viewModel.title
+        self.thumbnailImageView.kf.setImage(with: viewModel.thumbnailURL)
+        [viewModel.author, viewModel.categories, viewModel.pageCount, viewModel.publishedDate, viewModel.publisher].forEach { data in
+            infoDataList.append(data)
         }
-        [displayedBook.author, displayedBook.categories, displayedBook.pageCount, displayedBook.publishedDate, displayedBook.publisher].forEach { data in
-            self.infoDataList.append(data)
-        }
-        self.descriptionTextView.text = displayedBook.description
+        self.descriptionTextView.text = viewModel.description
         self.bookInfoTableView.reloadData()
+    }
+    
+    func displayFetchBookError(viewModel: DetailBook.FetchBook.ViewModel.Error) {
+        self.setupErrorLayout()
+        
+        self.errorLabel.text = viewModel.message
+        print("에러!!", viewModel.message)
+        self.errorLabel.isHidden = false
     }
 }
 
@@ -166,8 +186,10 @@ extension DetailBookViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(type: DetailBookCell.self, for: indexPath)
-        cell.configure(self.infoTitleList[indexPath.row], self.infoDataList[indexPath.row])
+        cell.configure(title: self.infoTitleList[indexPath.row],
+                       info: self.infoDataList[indexPath.row])
         return cell
     }
 
+    
 }
