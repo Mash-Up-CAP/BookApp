@@ -12,32 +12,35 @@
 
 import UIKit
 
-typealias BookInfo = VolumeInfo
-
 enum DetailBook
-{
-  // MARK: Use cases
-  
-  enum GetBook
+{  
+  enum FetchBook
   {
     struct Request
     {
     }
     struct Response
     {
-        var bookInfo: BookInfo
+        var book: Book
+
+        struct Error {
+            var message: String
+        }
     }
     struct ViewModel
     {
         struct DisplayedBook {
             var title: String
-            var author: String?
-            var thumbnailURL: URL?
+            var author: String
+            var thumbnailURL: URL
             var pageCount: String
-            var categories: String?
-            var description: String?
-            var publisher: String?
+            var categories: String
+            var description: String
+            var publisher: String
             var publishedDate: String
+        }
+        struct Error {
+            var message: String
         }
         var displayedBook: DisplayedBook
     }

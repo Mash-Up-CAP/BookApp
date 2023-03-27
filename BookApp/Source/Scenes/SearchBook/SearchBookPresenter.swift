@@ -12,29 +12,38 @@
 
 import UIKit
 
-protocol SearchBookPresentationLogic
-{
-  func presentFetchedBooks(response: SearchBook.FetchBooks.Response)
+protocol SearchBookPresentationLogic {
+    func presentFetchBookList(response: SearchBook.FetchBookList.Response)
+    func presentFetchBookListError(response: SearchBook.FetchBookList.Response.Error)
 }
 
-final class SearchBookPresenter: SearchBookPresentationLogic
-{
+final class SearchBookPresenter: SearchBookPresentationLogic {
     weak var viewController: SearchBookDisplayLogic?
 
-    func presentFetchedBooks(response: SearchBook.FetchBooks.Response) {
+    func presentFetchBookList(response: SearchBook.FetchBookList.Response) {
   
-        var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
-        for book in response.books.items {
-            let book = book.volumeInfo
-            let author = book.authors.joined(separator: ", ")
-            let thumbnailURL = URL(string: book.imageLinks!.thumbnail)!
-            let displayedBook = SearchBook.FetchBooks.ViewModel.DisplayedBook(title: book.title,
+        var displayedBookList: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = []
+        for book in response.bookList {
+            let author = book.author?.joined(separator: ", ") ?? "작자미상"
+            let publishedDate = book.publishedDate ?? ""
+            guard let thumbnailURL = URL(string: book.thumbnailLink ?? "") else { return }
+            let displayedBook = SearchBook.FetchBookList.ViewModel.DisplayedBook(title: book.title,
                                                                               author: author,
-                                                                              publishedDate: book.publishedDate,
+                                                                              publishedDate: publishedDate,
                                                                               thumbnailURL: thumbnailURL)
-            displayedBooks.append(displayedBook)
+            displayedBookList.append(displayedBook)
         }
-        let viewModel = SearchBook.FetchBooks.ViewModel(displayedBooks: displayedBooks)
-        viewController?.displayFetchBooks(viewModel: viewModel)
+            
+        let viewModel = SearchBook.FetchBookList.ViewModel(displayedBookList: displayedBookList)
+        Task { @MainActor in
+            self.viewController?.displayFetchBookList(viewModel: viewModel)
+        }
+    }
+    
+    func presentFetchBookListError(response: SearchBook.FetchBookList.Response.Error) {
+        let viewModel = SearchBook.FetchBookList.ViewModel.Error(message: response.message)
+        Task { @MainActor in
+            self.viewController?.displayFetchBookListError(viewModel: viewModel)
+        }
     }
 }

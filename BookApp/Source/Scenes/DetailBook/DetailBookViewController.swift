@@ -12,83 +12,184 @@
 
 import UIKit
 import Kingfisher
+import SnapKit
 
-protocol DetailBookDisplayLogic: AnyObject
-{
-  func displaySomething(viewModel: DetailBook.GetBook.ViewModel)
+protocol DetailBookDisplayLogic: AnyObject {
+    func displayFetchBook(viewModel: DetailBook.FetchBook.ViewModel.DisplayedBook)
+    func displayFetchBookError(viewModel: DetailBook.FetchBook.ViewModel.Error)
 }
 
-final class DetailBookViewController: UIViewController, DetailBookDisplayLogic
-{
-  var interactor: DetailBookBusinessLogic?
-  var router: (NSObjectProtocol & DetailBookRoutingLogic & DetailBookDataPassing)?
+final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
+    var interactor: DetailBookBusinessLogic?
+    var router: (DetailBookRoutingLogic & DetailBookDataPassing)?
+    
+    // MARK: - Object lifecycle
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    // MARK: - Setup
+    
+    private func setup() {
+        let viewController = self
+        let interactor = DetailBookInteractor()
+        let presenter = DetailBookPresenter()
+        let router = DetailBookRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
+    }
 
-  // MARK: Object lifecycle
+    // MARK: - UI Componenet
+    
+    private lazy var thumbnailImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    private lazy var lineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGray5
+        return view
+    }()
+    
+    private lazy var bookInfoTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.isScrollEnabled = false
+        tableView.estimatedRowHeight = 15
+        tableView.dataSource = self
+        tableView.register(DetailBookCell.self)
+        return tableView
+    }()
+    
+    private lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "책 소개"
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
+        return label
+    }()
+    
+    private lazy var descriptionTextView: UITextView = {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.font = .systemFont(ofSize: 12, weight: .regular)
+        return textView
+    }()
+    
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15, weight: .semibold)
+        label.textColor = .red
+        label.isHidden = true
+        return label
+    }()
+    
+    // MARK: - View lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = .systemBackground
+        self.requestBook()
+    }
+    
+    private func requestBook() {
+        let request = DetailBook.FetchBook.Request()
+        interactor?.fetchBook(request: request)
+    }
+    
+    private func setupLayout() {
+        [self.thumbnailImageView, self.lineView, self.bookInfoTableView, self.descriptionLabel, self.descriptionTextView].forEach { view in
+            self.view.addSubview(view)
+        }
+        
+        self.thumbnailImageView.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(10)
+            make.width.equalTo(150)
+            make.height.equalTo(180)
+            make.centerX.equalToSuperview()
+        }
+        
+        self.lineView.snp.makeConstraints { make in
+            make.top.equalTo(self.thumbnailImageView.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(3)
+        }
+
+        self.bookInfoTableView.snp.makeConstraints { make in
+            make.top.equalTo(self.lineView.snp.bottom).offset(10)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(210)
+        }
+
+        self.descriptionLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.bookInfoTableView.snp.bottom).offset(30)
+            make.leading.equalToSuperview().offset(20)
+        }
+
+        self.descriptionTextView.snp.makeConstraints { make in
+            make.top.equalTo(self.descriptionLabel.snp.bottom)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.bottom.equalToSuperview().inset(20)
+        }
+    }
   
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
-  {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    setup()
-  }
-  
-  required init?(coder aDecoder: NSCoder)
-  {
-    super.init(coder: aDecoder)
-    setup()
-  }
-  
-  // MARK: Setup
-  
-  private func setup()
-  {
-    let viewController = self
-    let interactor = DetailBookInteractor()
-    let presenter = DetailBookPresenter()
-    let router = DetailBookRouter()
-    viewController.interactor = interactor
-    viewController.router = router
-    interactor.presenter = presenter
-    presenter.viewController = viewController
-    router.viewController = viewController
-    router.dataStore = interactor
-  }
-  
-  // MARK: View lifecycle
-  
-  override func viewDidLoad()
-  {
-      super.viewDidLoad()
-      self.getBook()
-  }
-  
-  // MARK: Do something
-  
-    @IBOutlet private weak var thumbnailImageView: UIImageView!
-    @IBOutlet private weak var authorLabel: UILabel!
-    @IBOutlet private weak var categoryLabel: UILabel!
-    @IBOutlet private weak var pageLabel: UILabel!
-    @IBOutlet private weak var publishedDateLabel: UILabel!
-    @IBOutlet private weak var publisherLabel: UILabel!
-    @IBOutlet private weak var descriptionTextView: UITextView!
+    private func setupErrorLayout() {
+        self.view.addSubview(self.errorLabel)
+        
+        self.errorLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+    }
+    // MARK: - Display Logic
+    
+    private let infoTitleList: [String] = ["작가", "카테고리", "쪽수", "출판일", "출판사"]
+    private (set)var infoDataList: [String] = []
+    
+    func displayFetchBook(viewModel: DetailBook.FetchBook.ViewModel.DisplayedBook) {
+        self.setupLayout()
+        
+        self.navigationItem.title = viewModel.title
+        self.thumbnailImageView.kf.setImage(with: viewModel.thumbnailURL)
+        [viewModel.author, viewModel.categories, viewModel.pageCount, viewModel.publishedDate, viewModel.publisher].forEach { data in
+            infoDataList.append(data)
+        }
+        self.descriptionTextView.text = viewModel.description
+        self.bookInfoTableView.reloadData()
+    }
+    
+    func displayFetchBookError(viewModel: DetailBook.FetchBook.ViewModel.Error) {
+        self.setupErrorLayout()
+        
+        self.errorLabel.text = viewModel.message
+        print("에러!!", viewModel.message)
+        self.errorLabel.isHidden = false
+    }
+}
+
+extension DetailBookViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.infoTitleList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(type: DetailBookCell.self, for: indexPath)
+        cell.configure(title: self.infoTitleList[indexPath.row],
+                       info: self.infoDataList[indexPath.row])
+        return cell
+    }
 
     
-  private func getBook()
-  {
-    let request = DetailBook.GetBook.Request()
-      interactor?.getBook(request: request)
-  }
-  
-  func displaySomething(viewModel: DetailBook.GetBook.ViewModel)
-  {
-      let displayedBook = viewModel.displayedBook
-      self.navigationItem.title = displayedBook.title
-      self.thumbnailImageView.kf.setImage(with: displayedBook.thumbnailURL)
-      self.authorLabel.text = displayedBook.author
-      self.categoryLabel.text = displayedBook.categories
-      self.pageLabel.text = displayedBook.pageCount
-      self.publishedDateLabel.text = displayedBook.publishedDate
-      self.publisherLabel.text = displayedBook.publisher
-      self.descriptionTextView.text = displayedBook.description
-      
-  }
 }

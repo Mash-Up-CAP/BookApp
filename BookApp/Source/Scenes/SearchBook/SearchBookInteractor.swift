@@ -12,35 +12,36 @@
 
 import UIKit
 
-protocol SearchBookBusinessLogic
-{
-    func fetchBooks(request: SearchBook.FetchBooks.Request)
+protocol SearchBookBusinessLogic {
+    func fetchBookList(request: SearchBook.FetchBookList.Request)
 }
 
-protocol SearchBookDataStore
-{
-    var books: Books? { get }
+protocol SearchBookDataStore {
+    var bookList: [Book]? { get }
 }
 
-final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore
-{
+final class SearchBookInteractor: SearchBookBusinessLogic, SearchBookDataStore {
+    var bookList: [Book]?
+    
     var presenter: SearchBookPresentationLogic?
+    private var worker: SearchBookWorkerProtocol?
     
-    var books: Books?
-    private var bookWorker = SearchBookWorker(booksStore: BooksStaticStore()) // TODO: API 연동하면 바꾸기
-    
-    func fetchBooks(request: SearchBook.FetchBooks.Request) {
-        
+    init(worker: SearchBookWorkerProtocol = SearchBookWorker()) {
+        self.worker = worker
+    }
+
+    func fetchBookList(request: SearchBook.FetchBookList.Request) {
+        guard let worker = worker else { return }
         Task {
             do {
-                let books = try await self.bookWorker.fetchBooks()
-                self.books = books
-                let response = SearchBook.FetchBooks.Response(books: books)
-                self.presenter?.presentFetchedBooks(response: response)
+                let bookModels = try await worker.requestAPIBooks(title: request.title, startIndex: request.startIndex)
+                self.bookList = bookModels
+                let response = SearchBook.FetchBookList.Response(bookList: bookModels)
+                presenter?.presentFetchBookList(response: response)
             } catch {
-                
+                presenter?.presentFetchBookListError(response: .init(message: error.localizedDescription))
             }
         }
-        
     }
+    
 }

@@ -11,57 +11,75 @@
 //
 
 import UIKit
+import SnapKit
 
-protocol SearchBookDisplayLogic: AnyObject
-{
-  func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel)
+@MainActor
+protocol SearchBookDisplayLogic: AnyObject {
+    func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel)
+    func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error)
 }
 
-final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
-{
-  var interactor: SearchBookBusinessLogic?
-  var router: (NSObjectProtocol & SearchBookRoutingLogic & SearchBookDataPassing)?
-
-  // MARK: Object lifecycle
-  
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
-  {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    setup()
-  }
-  
-  required init?(coder aDecoder: NSCoder)
-  {
-    super.init(coder: aDecoder)
-    setup()
-  }
-  
-  // MARK: Setup
-  
-  private func setup()
-  {
-    let viewController = self
-    let interactor = SearchBookInteractor()
-    let presenter = SearchBookPresenter()
-    let router = SearchBookRouter()
-    viewController.interactor = interactor
-    viewController.router = router
-    interactor.presenter = presenter
-    presenter.viewController = viewController
-    router.viewController = viewController
-    router.dataStore = interactor
-  }
+final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     
-  // MARK: View lifecycle
-  
-  override func viewDidLoad()
-  {
-      super.viewDidLoad()
-      self.setUpNavigation()
-      self.fetchBooks()
-      self.configureTableView()
-  }
+    var interactor: SearchBookBusinessLogic?
+    var router: (SearchBookRoutingLogic & SearchBookDataPassing)?
+    
+    // MARK: - Object lifecycle
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    // MARK: - Setup
+    
+    private func setup() {
+        let viewController = self
+        let interactor = SearchBookInteractor()
+        let presenter = SearchBookPresenter()
+        let router = SearchBookRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
+    }
 
+    // MARK: - UIComponent
+    
+    private lazy var bookListTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.rowHeight = 120
+        tableView.backgroundColor = .systemBackground
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(SearchBookCell.self)
+        return tableView
+    }()
+    
+    // MARK: - View Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.setUpLayout()
+        self.setUpNavigation()
+        self.fetchBooks(title: "love", startIndex: 0) // 임시로 값 테스트
+    }
+    
+    private func setUpLayout() {
+        self.view.addSubview(self.bookListTableView)
+        
+        self.bookListTableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
     private func setUpNavigation() {
         let searchController = UISearchController()
         searchController.searchBar.placeholder = "원하는 도서를 검색하세요."
@@ -72,31 +90,28 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic
         self.navigationItem.searchController = searchController
     }
     
-    private func configureTableView() {
-        self.bookListTableView.dataSource = self
-        self.bookListTableView.delegate = self
+    private func fetchBooks(title: String, startIndex: Int) {
+        let request = SearchBook.FetchBookList.Request(title: title, startIndex: startIndex)
+        self.interactor?.fetchBookList(request: request)
     }
+    
+    // MARK: - Display Logic
+    private var displayedBooks: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = []
 
-    // MARK: - UIComponent
-    @IBOutlet private weak var bookListTableView: UITableView!
-    private var displayedBooks: [SearchBook.FetchBooks.ViewModel.DisplayedBook] = []
-  
-    private func fetchBooks() {
-        let request = SearchBook.FetchBooks.Request()
-        interactor?.fetchBooks(request: request)
+    func displayFetchBookList(viewModel: SearchBook.FetchBookList.ViewModel) {
+        self.displayedBooks = viewModel.displayedBookList
+        self.bookListTableView.reloadData()
     }
-
-    func displayFetchBooks(viewModel: SearchBook.FetchBooks.ViewModel) {
-        DispatchQueue.main.async {
-            self.displayedBooks = viewModel.displayedBooks
-            self.bookListTableView.reloadData()
-        }
+    
+    func displayFetchBookListError(viewModel: SearchBook.FetchBookList.ViewModel.Error) {
+        let alert = UIAlertController(title: "\(viewModel.message)", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
 extension SearchBookViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("count", displayedBooks.count)
         return displayedBooks.count
     }
     
@@ -106,7 +121,6 @@ extension SearchBookViewController: UITableViewDataSource {
         cell.configure(displayedBook)
         return cell
     }
-    
 }
 
 extension SearchBookViewController: UISearchBarDelegate {
