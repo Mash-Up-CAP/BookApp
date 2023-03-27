@@ -14,7 +14,7 @@ import UIKit
 
 @objc protocol SearchBookRoutingLogic
 {
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
+    func routeToDetailBooks(_ selectedIndex: Int)
 }
 
 protocol SearchBookDataPassing
@@ -22,39 +22,32 @@ protocol SearchBookDataPassing
   var dataStore: SearchBookDataStore? { get }
 }
 
-class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing
+final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing
 {
+  
   weak var viewController: SearchBookViewController?
   var dataStore: SearchBookDataStore?
   
-  // MARK: Routing
+    // MARK: - Routing
+    func routeToDetailBooks(_ selectedIndex: Int) {
+        if let detailVC = viewController?.storyboard?.instantiateViewController(withIdentifier: "DetailBookViewController") as?  DetailBookViewController,
+           var detailDS = detailVC.router?.dataStore {
+            passDataToDetailBook(source: dataStore!, destination: &detailDS, index: selectedIndex)
+            navigateToDetailBook(source: viewController!, destination: detailVC)
+        }
+    }
+    
+    // MARK: - Navigation
+    func navigateToDetailBook(source: SearchBookViewController, destination: DetailBookViewController)
+  {
+      source.navigationController?.pushViewController(destination, animated: true)
+  }
   
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
-  //{
-  //  if let segue = segue {
-  //    let destinationVC = segue.destination as! SomewhereViewController
-  //    var destinationDS = destinationVC.router!.dataStore!
-  //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-  //  } else {
-  //    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-  //    let destinationVC = storyboard.instantiateViewController(withIdentifier: "SomewhereViewController") as! SomewhereViewController
-  //    var destinationDS = destinationVC.router!.dataStore!
-  //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-  //    navigateToSomewhere(source: viewController!, destination: destinationVC)
-  //  }
-  //}
-
-  // MARK: Navigation
-  
-  //func navigateToSomewhere(source: SearchBookViewController, destination: SomewhereViewController)
-  //{
-  //  source.show(destination, sender: nil)
-  //}
-  
-  // MARK: Passing data
-  
-  //func passDataToSomewhere(source: SearchBookDataStore, destination: inout SomewhereDataStore)
-  //{
-  //  destination.name = source.name
-  //}
+    // MARK: -  Passing data
+    func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int)
+  {
+      if let selectedBook: Book = source.books?.items[index] {
+          destination.book = selectedBook.volumeInfo
+      }
+  }
 }

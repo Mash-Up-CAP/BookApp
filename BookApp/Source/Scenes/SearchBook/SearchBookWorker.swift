@@ -12,9 +12,21 @@
 
 import UIKit
 
-class SearchBookWorker
-{
-  func doSomeWork()
-  {
-  }
+final class SearchBookWorker {
+    var booksStore: BooksStoreProtocol
+    
+    init(booksStore: BooksStoreProtocol) {
+        self.booksStore = booksStore
+    }
+    
+    func fetchBooks() async throws -> Books {
+        let books = try await self.booksStore.fetchStaticBooks()
+        return books
+    }
+
+}
+
+protocol BooksStoreProtocol {
+//    func fetchBooks(title: String) async throws -> [Book]
+    func fetchStaticBooks() async throws -> Books
 }
