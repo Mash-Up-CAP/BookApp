@@ -13,27 +13,34 @@
 import UIKit
 
 enum SearchBook
-{
-  // MARK: Use cases
-  
-  enum FetchBooks
+{  
+  enum FetchBookList
   {
     struct Request
     {
+        let title: String
+        let startIndex: Int
     }
     struct Response
     {
-        var books: Books
+        var bookList: [Book]
+
+        struct Error {
+            var message: String
+        }
     }
     struct ViewModel
     {
         struct DisplayedBook {
             var title: String
-            var author: String
-            var publishedDate: String
+            var author: String?
+            var publishedDate: String?
             var thumbnailURL: URL?
         }
-        var displayedBooks: [DisplayedBook]
+        struct Error {
+            var message: String
+        }
+        var displayedBookList: [DisplayedBook]
     }
   }
 }

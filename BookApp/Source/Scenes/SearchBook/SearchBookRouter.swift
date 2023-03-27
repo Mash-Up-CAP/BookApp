@@ -12,42 +12,37 @@
 
 import UIKit
 
-@objc protocol SearchBookRoutingLogic
-{
+@MainActor
+protocol SearchBookRoutingLogic: AnyObject {
     func routeToDetailBooks(_ selectedIndex: Int)
 }
 
-protocol SearchBookDataPassing
-{
+protocol SearchBookDataPassing: AnyObject {
   var dataStore: SearchBookDataStore? { get }
 }
 
-final class SearchBookRouter: NSObject, SearchBookRoutingLogic, SearchBookDataPassing
-{
+final class SearchBookRouter: SearchBookRoutingLogic, SearchBookDataPassing {
   
   weak var viewController: SearchBookViewController?
   var dataStore: SearchBookDataStore?
   
     // MARK: - Routing
     func routeToDetailBooks(_ selectedIndex: Int) {
-        if let detailVC = viewController?.storyboard?.instantiateViewController(withIdentifier: "DetailBookViewController") as?  DetailBookViewController,
-           var detailDS = detailVC.router?.dataStore {
-            passDataToDetailBook(source: dataStore!, destination: &detailDS, index: selectedIndex)
-            navigateToDetailBook(source: viewController!, destination: detailVC)
-        }
+        let detailVC = DetailBookViewController()
+        guard var detailDS = detailVC.router?.dataStore else { return }
+        passDataToDetailBook(source: dataStore!, destination: &detailDS, index: selectedIndex)
+        navigateToDetailBook(source: viewController!, destination: detailVC)
     }
     
     // MARK: - Navigation
-    func navigateToDetailBook(source: SearchBookViewController, destination: DetailBookViewController)
-  {
-      source.navigationController?.pushViewController(destination, animated: true)
-  }
+    func navigateToDetailBook(source: SearchBookViewController, destination: DetailBookViewController) {
+        source.navigationController?.pushViewController(destination, animated: true)
+    }
   
     // MARK: -  Passing data
-    func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int)
-  {
-      if let selectedBook: Book = source.books?.items[index] {
-          destination.book = selectedBook.volumeInfo
-      }
-  }
+    func passDataToDetailBook(source: SearchBookDataStore, destination: inout DetailBookDataStore, index: Int) {
+        if let selectedBook = source.bookList {
+          destination.book = selectedBook[index]
+        }
+    }
 }

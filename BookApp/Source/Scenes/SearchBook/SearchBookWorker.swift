@@ -12,21 +12,33 @@
 
 import UIKit
 
-final class SearchBookWorker {
-    var booksStore: BooksStoreProtocol
+protocol SearchBookWorkerProtocol {
+    func requestAPIBooks(title: String, startIndex: Int) async throws -> [Book]
+}
+
+final class SearchBookWorker: SearchBookWorkerProtocol {
+    private var booksStore: BooksAPIProtocol
     
-    init(booksStore: BooksStoreProtocol) {
+    init(booksStore: BooksAPIProtocol = BooksAPI()) {
         self.booksStore = booksStore
     }
     
-    func fetchBooks() async throws -> Books {
-        let books = try await self.booksStore.fetchStaticBooks()
-        return books
+    func requestAPIBooks(title: String, startIndex: Int) async throws -> [Book] {
+        let request = SearchBookRequest(q: title, startIndex: "\(startIndex)")
+        let data = try await booksStore.getBookRequest(request: request).items.map({ response in
+            response.map { self.translate($0.volumeInfo) } })
+       return data ?? []
     }
-
-}
-
-protocol BooksStoreProtocol {
-//    func fetchBooks(title: String) async throws -> [Book]
-    func fetchStaticBooks() async throws -> Books
+    
+    private func translate(_ response: SearchBookResponse.BookItem.BookInfo) -> Book {
+        return .init(title: response.title,
+                  author: response.authors,
+                  publishedDate: response.publishedDate,
+                     thumbnailLink: response.imageLinks?.thumbnail,
+                  description: response.description,
+                  pageCount: response.pageCount,
+                  publisher: response.publisher,
+                  categories: response.categories)
+        
+    }
 }

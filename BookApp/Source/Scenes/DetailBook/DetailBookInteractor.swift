@@ -12,29 +12,30 @@
 
 import UIKit
 
-protocol DetailBookBusinessLogic
-{
-  func getBook(request: DetailBook.GetBook.Request)
+protocol DetailBookBusinessLogic {
+    func fetchBook(request: DetailBook.FetchBook.Request)
 }
 
-protocol DetailBookDataStore
-{
-    var book: BookInfo? { get set }
+protocol DetailBookDataStore {
+    var book: Book? { get set }
 }
 
-final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore
-{
-    var book: BookInfo?
+final class DetailBookInteractor: DetailBookBusinessLogic, DetailBookDataStore {
     
+    enum FetchBookError: String {
+        case noBookResponse = "선택한 책 정보가 없습니다."
+    }
+    
+    var book: Book?
     var presenter: DetailBookPresentationLogic?
-  
-  // MARK: Do something
-  
-  func getBook(request: DetailBook.GetBook.Request)
-  {
-      if let book = book {
-          let response = DetailBook.GetBook.Response(bookInfo: book)
-          presenter?.presentBook(response: response)
-      }
-  }
+    
+    func fetchBook(request: DetailBook.FetchBook.Request) {
+//        book = nil // TODO: 에러 테스트 위함
+        if let book = book {
+            let response = DetailBook.FetchBook.Response(book: book)
+            presenter?.presentFetchBook(response: response)
+        } else {
+            presenter?.presentFetchBookError(response: .init(message: FetchBookError.noBookResponse.rawValue))
+        }
+    }
 }
