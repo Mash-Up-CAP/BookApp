@@ -131,10 +131,8 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     }
     
     private func fetchBooks(title: String, startIndex: Int) {
-        DispatchQueue.main.async {
-            self.indicatorView.isHidden = false
-            self.indicatorView.startAnimating()
-        }
+        self.indicatorView.isHidden = false
+        self.indicatorView.startAnimating()
         let request = SearchBook.FetchBookList.Request(title: title, startIndex: startIndex)
         self.interactor?.fetchBookList(request: request)
     }
@@ -150,11 +148,9 @@ final class SearchBookViewController: UIViewController, SearchBookDisplayLogic {
     private var searchText: String = ""
     private var displayedBooks: [SearchBook.FetchBookList.ViewModel.DisplayedBook] = [] {
         didSet {
-            DispatchQueue.main.async {
-                self.indicatorView.isHidden = true
-                self.bookListTableView.isHidden = self.displayedBooks.isEmpty
-                self.bookListTableView.reloadData()
-            }
+            self.indicatorView.isHidden = true
+            self.bookListTableView.isHidden = self.displayedBooks.isEmpty
+            self.bookListTableView.reloadData()
         }
     }
 
