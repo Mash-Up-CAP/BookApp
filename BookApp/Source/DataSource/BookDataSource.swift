@@ -7,12 +7,11 @@
 
 import Foundation
 
-protocol BooksAPIProtocol {
-    func getBookRequest(request: SearchBookRequest) async throws -> SearchBookResponse
+protocol BookDataSourceProtocol {
+    func getBook(request: SearchBookRequest) async throws -> SearchBookResponse
 }
 
-//datasource 역할인가?
-final class BooksAPI: BooksAPIProtocol {
+final class BookDataSource: BookDataSourceProtocol {
 
     private let network: NetworkProtocol
     
@@ -20,7 +19,7 @@ final class BooksAPI: BooksAPIProtocol {
         self.network = network
     }
     
-    func getBookRequest(request: SearchBookRequest) async throws -> SearchBookResponse {
+    func getBook(request: SearchBookRequest) async throws -> SearchBookResponse {
         return try await network.request(request)
     }
 

@@ -30,8 +30,10 @@ final class SearchBookRouter: SearchBookRoutingLogic, SearchBookDataPassing {
     func routeToDetailBooks(_ selectedIndex: Int) {
         let detailVC = DetailBookViewController()
         guard var detailDS = detailVC.router?.dataStore else { return }
-        passDataToDetailBook(source: dataStore!, destination: &detailDS, index: selectedIndex)
-        navigateToDetailBook(source: viewController!, destination: detailVC)
+        guard let dataStore = dataStore else { return }
+        guard let vc = viewController else { return }
+        passDataToDetailBook(source: dataStore, destination: &detailDS, index: selectedIndex)
+        navigateToDetailBook(source: vc, destination: detailVC)
     }
     
     // MARK: - Navigation

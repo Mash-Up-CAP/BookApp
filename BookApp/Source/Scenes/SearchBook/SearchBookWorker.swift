@@ -17,24 +17,25 @@ protocol SearchBookWorkerProtocol {
 }
 
 final class SearchBookWorker: SearchBookWorkerProtocol {
-    private var booksStore: BooksAPIProtocol
+    private var bookDataSource: BookDataSourceProtocol
     
-    init(booksStore: BooksAPIProtocol = BooksAPI()) {
-        self.booksStore = booksStore
+    init(datasource: BookDataSourceProtocol = BookDataSource()) {
+        self.bookDataSource = datasource
     }
     
     func requestAPIBooks(title: String, startIndex: Int) async throws -> [Book] {
         let request = SearchBookRequest(q: title, startIndex: "\(startIndex)")
-        let data = try await booksStore.getBookRequest(request: request).items.map({ response in
-            response.map { self.translate($0.volumeInfo) } })
-       return data ?? []
+        let data = try await bookDataSource.getBook(request: request).items?.map({ response in
+            self.translate(response.volumeInfo)
+        })
+        return data ?? []
     }
     
     private func translate(_ response: SearchBookResponse.BookItem.BookInfo) -> Book {
         return .init(title: response.title,
-                  author: response.authors,
+                     author: response.authors,
                   publishedDate: response.publishedDate,
-                     thumbnailLink: response.imageLinks?.thumbnail,
+                  thumbnailLink: response.imageLinks?.thumbnail,
                   description: response.description,
                   pageCount: response.pageCount,
                   publisher: response.publisher,

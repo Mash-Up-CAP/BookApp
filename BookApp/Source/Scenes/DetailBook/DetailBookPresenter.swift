@@ -26,22 +26,24 @@ final class DetailBookPresenter: DetailBookPresentationLogic {
           let authors = book.author?.joined(separator: ", ") ?? "작자미상"
           let categories = book.categories?.joined(separator: " | ") ?? "None"
           let pageCount = book.pageCount ?? 0
-          guard let thumbnailURL = URL(string: book.thumbnailLink ?? "") else { return }
           let displayedBook = DetailBook.FetchBook.ViewModel.DisplayedBook(title: book.title,
-                                                                         author: authors,
-                                                                         thumbnailURL: thumbnailURL,
-                                                                         pageCount: "\(pageCount)쪽",
-                                                                         categories: categories,
-                                                                         description: book.description ?? "",
-                                                                         publisher: book.publisher ?? "",
-                                                                         publishedDate: book.publishedDate ?? "")
-          
-          viewController?.displayFetchBook(viewModel: displayedBook)
+                                                                            author: authors,
+                                                                            thumbnailLink: book.thumbnailLink ?? "",
+                                                                            pageCount: "\(pageCount)쪽",
+                                                                            categories: categories,
+                                                                            description: book.description ?? "",
+                                                                            publisher: book.publisher ?? "",
+                                                                            publishedDate: book.publishedDate ?? "")
+        Task { @MainActor in
+            viewController?.displayFetchBook(viewModel: displayedBook)
+        }
     }
     
     func presentFetchBookError(response: DetailBook.FetchBook.Response.Error) {
         let viewModel = DetailBook.FetchBook.ViewModel.Error(message: response.message)
-        self.viewController?.displayFetchBookError(viewModel: viewModel)
+        Task { @MainActor in
+            self.viewController?.displayFetchBookError(viewModel: viewModel)
+        }
     }
 
 }

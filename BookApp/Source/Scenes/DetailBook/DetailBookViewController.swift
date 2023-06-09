@@ -14,6 +14,7 @@ import UIKit
 import Kingfisher
 import SnapKit
 
+@MainActor
 protocol DetailBookDisplayLogic: AnyObject {
     func displayFetchBook(viewModel: DetailBook.FetchBook.ViewModel.DisplayedBook)
     func displayFetchBookError(viewModel: DetailBook.FetchBook.ViewModel.Error)
@@ -162,7 +163,7 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         self.setupLayout()
         
         self.navigationItem.title = viewModel.title
-        self.thumbnailImageView.kf.setImage(with: viewModel.thumbnailURL)
+        self.thumbnailImageView.kf.setImage(with: URL(string: viewModel.thumbnailLink))
         [viewModel.author, viewModel.categories, viewModel.pageCount, viewModel.publishedDate, viewModel.publisher].forEach { data in
             infoDataList.append(data)
         }
@@ -174,7 +175,6 @@ final class DetailBookViewController: UIViewController, DetailBookDisplayLogic {
         self.setupErrorLayout()
         
         self.errorLabel.text = viewModel.message
-        print("에러!!", viewModel.message)
         self.errorLabel.isHidden = false
     }
 }
